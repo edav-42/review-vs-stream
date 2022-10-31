@@ -2,5 +2,18 @@
 
 ## Research topic
 
+The disconnection between critic reviews and actual sales and streams exists in every area of art.
+We are interested in the relationships between reviews and streams of top-reviewed/streamed tracks and albums.
+Specifically, we consider three dimensions of ranking:
+
+1. Critic reviews: reviews written by professional critics;
+2. User ratings: aggregated ratings assigned by general users;
+3. Streams: number of streams on streaming services.
+
+Intuitively, music with higher reviews should be streamed more. However, we can see a lot of hit songs with bad reviews, and many highly acclaimed albums that most people have never heard of.
+
+Therefore, exploring and visualizing the relationships between reviews and streams, together with some other dimensions, will give us some insights into how these systems work.
+At the application level, the revealed information can help build better recommendation systems, promotion strategies, etc.
+
 ## Data availability
 
