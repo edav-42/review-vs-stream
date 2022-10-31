@@ -76,7 +76,11 @@
 <li class="chapter" data-level="2" data-path="proposal.html"><a href="proposal.html"><i class="fa fa-check"></i><b>2</b> Proposal</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="proposal.html"><a href="proposal.html#research-topic"><i class="fa fa-check"></i><b>2.1</b> Research topic</a></li>
-<li class="chapter" data-level="2.2" data-path="proposal.html"><a href="proposal.html#data-availability"><i class="fa fa-check"></i><b>2.2</b> Data availability</a></li>
+<li class="chapter" data-level="2.2" data-path="proposal.html"><a href="proposal.html#data-availability"><i class="fa fa-check"></i><b>2.2</b> Data availability</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="proposal.html"><a href="proposal.html#critic-reviews"><i class="fa fa-check"></i><b>2.2.1</b> Critic Reviews</a></li>
+<li class="chapter" data-level="2.2.2" data-path="proposal.html"><a href="proposal.html#user-ratings"><i class="fa fa-check"></i><b>2.2.2</b> User Ratings</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>3</b> Data</a>
 <ul>
@@ -111,7 +115,7 @@
 <div id="research-topic" class="section level2 hasAnchor" number="2.1">
 <h2><span class="header-section-number">2.1</span> Research topic<a href="proposal.html#research-topic" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The disconnection between critic reviews and actual sales and streams exists in every area of art.
-We are interested in the relationships between reviews and streams of top-reviewed/streamed tracks and albums.
+We are interested in the relationships between <strong>reviews and streams</strong> of top-reviewed/streamed tracks and albums.
 Specifically, we consider three dimensions of ranking:</p>
 <ol style="list-style-type: decimal">
 <li>Critic reviews: reviews written by professional critics;</li>
@@ -124,7 +128,31 @@ At the application level, the revealed information can help build better recomme
 </div>
 <div id="data-availability" class="section level2 hasAnchor" number="2.2">
 <h2><span class="header-section-number">2.2</span> Data availability<a href="proposal.html#data-availability" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We collect data from 4 sources:</p>
+<ul>
+<li>Metacritic for critic reviews</li>
+<li>Rate Your Music for user ratings</li>
+<li>ChartMasters and Spotify for streaming performance</li>
+</ul>
+<div id="critic-reviews" class="section level3 hasAnchor" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> Critic Reviews<a href="proposal.html#critic-reviews" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Traditionally, critic reviews are released by publications like magazines and newspapers. <a href="https://metacritic.com">Metacritic</a> is a famous and reliable website that aggregates reviews of films, TV shows, music albums, etc. As for films, there are several other internet databases that are doing a similar job, like IMDB and Rotten Tomatoes. But when it comes to music, Metacritic is almost the only reliable source of aggregated critic reviews.
+What it does is just collect reviews from various publications, and then give an average score.</p>
+<div class="figure">
+<img src="assets/Snipaste_2022-10-31_13-24-55.png" alt="" />
+<p class="caption">Example critic reviews (Wikipedia)</p>
+</div>
+<p>Metacritic ranks albums according to their review score on its website. For example: <a href="https://www.metacritic.com/browse/albums/score/metascore/year/filtered?year_selected=2020&amp;distribution=&amp;sort=desc&amp;view=detailed">Best Music and Albums for 2020</a>.
+The data is presented in an HTML table, so we can easily scrape from their website using the package <code>rvest</code>.</p>
+<p>Note that we can also scrape the information of a specific album once we know its title. For example, from the album page <a href="https://www.metacritic.com/music/fetch-the-bolt-cutters">Fetch the Bolt Cutters by Fiona Apple Reviews and Tracks</a>.</p>
+</div>
+<div id="user-ratings" class="section level3 hasAnchor" number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> User Ratings<a href="proposal.html#user-ratings" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Most music review websites like Metacritic and Pitchfork focus on critic reviews. In terms of user ratings, <a href="https://rateyourmusic.com">Rate Your Music (RYM)</a> is the largest community-driven online music database. For example, the album OK Computer has 83,020 ratings on RYM, while only 654 user ratings on Metacritic.</p>
+<p>The ratings on RYM are averaged on user ratings. Like Metacritic, it also ranks albums according to their ratings on its website. For example: <a href="https://rateyourmusic.com/charts/top/album/2020/">Best albums of 2020 - Rate Your Music</a>.</p>
+<p>We use an unofficial Python API, <a href="https://github.com/dbeley/rymscraper">rymscraper</a>, to scrape the data on its website. The scripts will save fetched data in CSV files. Then we can read these CSV files using the function <code>read.csv()</code>.</p>
 
+</div>
 </div>
 </div>
             </section>

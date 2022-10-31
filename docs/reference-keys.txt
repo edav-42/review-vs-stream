@@ -2,6 +2,8 @@ introduction
 proposal
 research-topic
 data-availability
+critic-reviews
+user-ratings
 data
 sources
 cleaning-transformation
