@@ -17,3 +17,29 @@ At the application level, the revealed information can help build better recomme
 
 ## Data availability
 
+We collect data from 4 sources:
+
+- Metacritic for critic reviews
+- Rate Your Music for user ratings
+- ChartMasters and Spotify for streaming performance
+
+### Critic Reviews
+
+Traditionally, critic reviews are released by publications like magazines and newspapers. [Metacritic](https://metacritic.com) is a famous and reliable website that aggregates reviews of films, TV shows, music albums, etc. As for films, there are several other internet databases that are doing a similar job, like IMDB and Rotten Tomatoes. But when it comes to music, Metacritic is almost the only reliable source of aggregated critic reviews.
+What it does is just collect reviews from various publications, and then give an average score.
+
+![Example critic reviews (Wikipedia)](assets/Snipaste_2022-10-31_13-24-55.png)
+
+Metacritic ranks albums according to their review score on its website. For example: [Best Music and Albums for 2020](https://www.metacritic.com/browse/albums/score/metascore/year/filtered?year_selected=2020&distribution=&sort=desc&view=detailed).
+The data is presented in an HTML table, so we can easily scrape from their website using the package `rvest`.
+
+Note that we can also scrape the information of a specific album once we know its title. For example, from the album page [Fetch the Bolt Cutters by Fiona Apple Reviews and Tracks](https://www.metacritic.com/music/fetch-the-bolt-cutters).
+
+### User Ratings
+
+Most music review websites like Metacritic and Pitchfork focus on critic reviews. In terms of user ratings, [Rate Your Music (RYM)](https://rateyourmusic.com) is the largest community-driven online music database. For example, the album OK Computer has 83,020 ratings on RYM, while only 654 user ratings on Metacritic.
+
+The ratings on RYM are averaged on user ratings. Like Metacritic, it also ranks albums according to their ratings on its website. For example: [Best albums of 2020 - Rate Your Music](https://rateyourmusic.com/charts/top/album/2020/).
+
+We use an unofficial Python API, [rymscraper](https://github.com/dbeley/rymscraper), to scrape the data on its website. The scripts will save fetched data in CSV files. Then we can read these CSV files using the function `read.csv()`.
+
