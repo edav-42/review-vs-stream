@@ -3,7 +3,7 @@
 ## Research topic
 
 The disconnection between critic reviews and actual sales and streams exists in every area of art.
-We are interested in the relationships between reviews and streams of top-reviewed/streamed tracks and albums.
+We are interested in the relationships between **reviews and streams** of top-reviewed/streamed tracks and albums.
 Specifically, we consider three dimensions of ranking:
 
 1. Critic reviews: reviews written by professional critics;
