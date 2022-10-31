@@ -35,6 +35,12 @@ The data is presented in an HTML table, so we can easily scrape from their websi
 
 Note that we can also scrape the information of a specific album once we know its title. For example, from the album page [Fetch the Bolt Cutters by Fiona Apple Reviews and Tracks](https://www.metacritic.com/music/fetch-the-bolt-cutters).
 
+A sample observation:
+
+| Rank | Title                  | Artist(s)   | Release Date   | Critic Review | User Score |
+| ---- | ---------------------- | ----------- | -------------- | ------------- | ---------- |
+| 1    | Fetch the Bolt Cutters | Fiona Apple | April 17, 2020 | 98            | 81         |
+
 ### User Ratings
 
 Most music review websites like Metacritic and Pitchfork focus on critic reviews. In terms of user ratings, [Rate Your Music (RYM)](https://rateyourmusic.com) is the largest community-driven online music database. For example, the album OK Computer has 83,020 ratings on RYM, while only 654 user ratings on Metacritic.
@@ -43,3 +49,24 @@ The ratings on RYM are averaged on user ratings. Like Metacritic, it also ranks 
 
 We use an unofficial Python API, [rymscraper](https://github.com/dbeley/rymscraper), to scrape the data on its website. The scripts will save fetched data in CSV files. Then we can read these CSV files using the function `read.csv()`.
 
+A sample observation:
+
+| Rank | Album    | Artist(s) | Release Date    | Genres  | Rating | \# Ratings | \# Reviews |
+| ---- | -------- | --------- | --------------- | ------- | ------ | ---------- | ---------- |
+| 4    | One Life | Malibu    | 1 November 2019 | Ambient | 3.63   | 721        | 2          |
+
+### Streams
+
+Today we are in an age of streaming media. Spotify is the world's biggest music streaming platform. However, like other streaming platforms, Spotify does not expose the number of streams to the public. However, its [official APIs](https://developer.spotify.com/documentation/web-api/reference/#/operations/get-track) expose an attribute called `popularity`, which is a value between 0 and 100 based on the number of plays a track has. This feature can reflect the streaming performance of a track. And the popularity of an album can be calculated based on its tracks' popularity.
+
+We use [spotifyr](https://github.com/charlie86/spotifyr), an R wrapper for Spotify's API, to get data.
+
+An example observation:
+
+| Album            | Average Popularity | Maximum Track Popularity | Summed Popularity |
+| ---------------- | ------------------ | ------------------------ | ----------------- |
+| Future Nostalgia | 70.63636           | 83                       | 777               |
+
+Another professional website that provides data on streams is [ChartMasters](https://chartmasters.org). It converts the number of streams to equivalent album sales (EAS), and presents it in HTML tables. Therefore, we can use `rvest` to scrape the data.
+
+However, although ChartMasters is a reputable organization and claims that they collect data directly from official databases like Spotify's, we are unable to find the direct source of their data. Therefore, we use data from ChartMasters as additional data to confirm other observations.
