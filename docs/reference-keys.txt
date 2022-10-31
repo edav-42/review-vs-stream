@@ -4,6 +4,7 @@ research-topic
 data-availability
 critic-reviews
 user-ratings
+streams
 data
 sources
 cleaning-transformation
