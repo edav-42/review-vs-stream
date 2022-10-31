@@ -139,8 +139,11 @@ At the application level, the revealed information can help build better recomme
 <h3><span class="header-section-number">2.2.1</span> Critic Reviews<a href="proposal.html#critic-reviews" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Traditionally, critic reviews are released by publications like magazines and newspapers. <a href="https://metacritic.com">Metacritic</a> is a famous and reliable website that aggregates reviews of films, TV shows, music albums, etc. As for films, there are several other internet databases that are doing a similar job, like IMDB and Rotten Tomatoes. But when it comes to music, Metacritic is almost the only reliable source of aggregated critic reviews.
 What it does is just collect reviews from various publications, and then give an average score.</p>
-<p align="center">
-<img src="assets/Snipaste_2022-10-31_13-24-55.png" alt="Example critic reviews (Wikipedia)" /> {width=50%}
+<p align="center" style="width:300px">
+<div class="figure">
+<img src="assets/Snipaste_2022-10-31_13-24-55.png" alt="" />
+<p class="caption">Example critic reviews (Wikipedia)</p>
+</div>
 </p>
 <p>Metacritic ranks albums according to their review score on its website. For example: <a href="https://www.metacritic.com/browse/albums/score/metascore/year/filtered?year_selected=2020&amp;distribution=&amp;sort=desc&amp;view=detailed">Best Music and Albums for 2020</a>.
 The data is presented in an HTML table, so we can easily scrape from their website using the package <code>rvest</code>.</p>
