@@ -28,7 +28,7 @@ We collect data from 4 sources:
 Traditionally, critic reviews are released by publications like magazines and newspapers. [Metacritic](https://metacritic.com) is a famous and reliable website that aggregates reviews of films, TV shows, music albums, etc. As for films, there are several other internet databases that are doing a similar job, like IMDB and Rotten Tomatoes. But when it comes to music, Metacritic is almost the only reliable source of aggregated critic reviews.
 What it does is just collect reviews from various publications, and then give an average score.
 
-<img src="assets/Snipaste_2022-10-31_13-24-55.png" width="300px" align="center" alt><p class="caption" align="center">Example critic reviews (Wikipedia)</p>
+<p style="text-align: center"><img src="assets/Snipaste_2022-10-31_13-24-55.png" width="300px" align="center" alt><p class="caption" align="center">Example critic reviews (Wikipedia)</p></p>
 
 Metacritic ranks albums according to their review score on its website. For example: [Best Music and Albums for 2020](https://www.metacritic.com/browse/albums/score/metascore/year/filtered?year_selected=2020&distribution=&sort=desc&view=detailed). Metacritic adds new albums to its database several times a week and updates the reviews everyday [^1].
 
