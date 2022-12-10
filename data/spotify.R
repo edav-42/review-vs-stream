@@ -1,6 +1,6 @@
 library(tidyverse)
 library(spotifyr)
-token <- read.csv('spotify_token')
+token <- read.csv('~/tmp/review-vs-stream/data/spotify_token')
 Sys.setenv(SPOTIFY_CLIENT_ID = token[1,1])
 Sys.setenv(SPOTIFY_CLIENT_SECRET = token[1,2])
 
