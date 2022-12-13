@@ -3,5 +3,5 @@
 .RData
 .Ruserdata
 data/spotify_token
-#.DS_Store
-#data/geckodriver.log
+.DS_Store
+data/geckodriver.log
