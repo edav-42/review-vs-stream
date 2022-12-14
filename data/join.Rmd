@@ -1,15 +1,15 @@
 ```{r}
 library(tidyverse)
-meta <- read.csv('data/meta.csv') %>% select(-X)
-rym <- read.csv('data/rym.csv') %>% select(-X)
+meta <- read.csv('data/meta.csv') %>% select(-c(X, User_Score))
+rym <- read.csv('data/rym.csv')
 spotify <- read.csv('data/spotify.csv') %>% select(-X)
 meta %>% summarise(n = n_distinct(id))
 ```
 
 ```{r}
 rym_minus <- rym %>%
-    select('id', 'RYM Rating' = 'RYM.Rating', 'Genres', 'Language', 'Tracks' = 'Track.listing', 'Colorscheme', 'RYM Rank' = 'Ranked', '#Ratings' = 'Num_of_RYM_Ratings')
+    select('id', 'RYM_Rating' = 'RYM.Rating', 'Genres', 'Language', 'Tracks' = 'Track.listing', 'Colorscheme', 'RYM_Rank' = 'Ranked', 'Num_of_RYM_Ratings' = 'Num_of_RYM_Ratings')
 data <- merge(x = meta, y = rym_minus, by = 'id', all.x = TRUE)
 data <- merge(x = data, y = spotify, by = 'id', all.x = TRUE)
-write.csv(data, 'data/data.csv')
+write.csv(data, 'data/data.csv', row.names = F)
 ```
