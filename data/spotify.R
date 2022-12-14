@@ -1,16 +1,16 @@
-```{r}
+## ----------------------------------------------------------------------------------------------------------------
 library(tidyverse)
 library(spotifyr)
 token <- read.csv("data/spotify_token")
 Sys.setenv(SPOTIFY_CLIENT_ID = token[1, 1])
 Sys.setenv(SPOTIFY_CLIENT_SECRET = token[1, 2])
-```
 
-```{r}
+
+## ----------------------------------------------------------------------------------------------------------------
 access_token <- get_spotify_access_token()
-```
 
-```{r}
+
+## ----------------------------------------------------------------------------------------------------------------
 # given album name and singer name, get album's tracks data 
 get_tracks_data <- function(album_name, singer) {
   res <- search_spotify(paste(album_name, singer, sep = ", "), type = "album")[1, 5] %>%
@@ -59,56 +59,48 @@ get_tracks_data <- function(album_name, singer) {
     # )
   return(df)
 }
-```
 
-```{r}
+
+## ----------------------------------------------------------------------------------------------------------------
 # given album name and singer name, get stream popularity
 get_album_data <- function(album_name, singer) {
   res <- search_spotify(paste(album_name, singer, sep = ", "), type = "album")[1, 5] %>%
     get_album_tracks()
-  res <- get_tracks(res$id) %>%
+  
+  res <-  get_tracks(res$id) %>%
     summarise(
-      avg_pop = mean(popularity),
-      max_pop = max(popularity),
-      min_pop = min(popularity),
-      med_pop = median(popularity),
+      pop = summary(popularity),
       n = n()
     )
+ 
   return(res)
 }
-```
 
-```{r}
+
+## ----------------------------------------------------------------------------------------------------------------
 # for music in metacritic_data.csv get spotify popularity
 df <- read.csv("data/metacritic_data_new.csv")
-```
 
-```{r}
-spotify_data <- data.frame()
-not_matched <- 1:nrow(df)
-maxiter <- 1 # increase if too many missing albums
-iter <- 1
-while (iter <= maxiter) {
-  not_matched_new <- NULL
-  for (i in not_matched) {
-    album_name <- df[i, "Album_Name"]
-    singer <- df[i, "Singer"]
-    tryCatch({
-      row <- get_album_data(album_name, singer)
-      row$id <- df[i, 'id']
-      spotify_data <- rbind(spotify_data, row)
-      print(c(i, '✅', singer, album_name))
-    }, error = function(e) {
-      not_matched_new <<- c(not_matched_new, i)
-      print(c(i, '❌', singer, album_name))
-    })
-  }
-  not_matched <- not_matched_new
-  iter <- 1
+
+## ----------------------------------------------------------------------------------------------------------------
+not_matched <- 0
+spotify_data <- data.frame(matrix(ncol = 4, nrow = 0))
+
+for (i in 1:1) {
+  album_name <- df[i, "Album_Name"]
+  singer <- df[i, "Singer"]
+  tryCatch({
+    row <- get_album_data(album_name, singer)
+    spotify_data <- rbind(spotify_data, row)
+    print(c(i, '✅', singer, album_name))
+  }, error = function(e) {
+    not_matched <<- c(not_matched, i)
+    print(c(i, '❌', singer, album_name))
+  })
 }
-```
 
-```{r}
+
+## ----------------------------------------------------------------------------------------------------------------
 # export to csv
 write.csv(spotify_data, "data/spotify_new.csv", row.names=FALSE)
-```
+
