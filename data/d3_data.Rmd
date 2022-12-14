@@ -1,0 +1,8 @@
+```{r}
+library(tidyverse)
+meta <- read.csv('data/meta.csv') %>% filter(Release_Year == 2022L, Rank <= 100)
+spot <- read.csv('data/spotify_tracks.csv')
+data <- merge(meta, spot, by = 'id', all.x = T) %>%
+    select(-c(User_Score, Release_Year, track_id, duration_ms, X))
+write.csv(data, 'data/d3_data.csv', row.names = F)
+```
