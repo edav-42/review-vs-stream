@@ -4,67 +4,74 @@ output: html_document
 
 # Results
 
-```{r, echo=FALSE, message=FALSE}
+
+```{r, echo=FALSE}
 library(ggplot2)
-library(dplyr)
-library(forcats)
-df <- read.csv("data/data.csv")
+df = read.csv("data/data.csv")
 
-mt <- read.csv("data/meta.csv")
-rym <- read.csv("data/rym.csv")
-rym$Released <- as.Date(rym$Released, format = "%d %B %Y")
+mt = read.csv("data/meta.csv")
+rym = read.csv("data/rym.csv")
+rym$Released <- as.Date(rym$Released , format = "%d %B %Y")
 
-sptf <- read.csv("data/spotify.csv")
-sptf_tk <- read.csv("data/spotify_tracks.csv")
+sptf = read.csv("data/spotify.csv")
+sptf_tk = read.csv("data/spotify_tracks.csv")
 ```
 
 ## Metacritic
 ```{r}
-ggplot(df, aes(Release_Date, Metacritic_Score)) +
-  geom_point(size = 0.02, alpha = 0.5) +
+mt = ggplot(df, aes(Release_Date, Metacritic_Score)) + 
+  geom_point(size = 0.02, alpha = 0.5) + 
   labs(x = "Album Release Date", y = "Album Score on Metacritic") +
-  theme(axis.text.x = element_blank()) +
+  theme(axis.text.x = element_blank())+ 
   ggtitle("Album Score on Metacritic")
-```
 
-```{r}
-ggplot(df, aes(x = factor(Release_Year), y = Metacritic_Score)) +
+mt_d = ggplot(df, aes(x=factor(Release_Year),y=Metacritic_Score)) +
   geom_boxplot() +
   ggtitle("Album Score on Metacritic") +
-  labs(y = "Release Year", x = "Album Score on Metacritic")
+  labs(y="Release Year", x="Album Score on Metacritic")
+
+multiplot(mt,mt_d,cols = 2)
 ```
 
-```{r,fig.height = 10, fig.width = 5}
+
+```{r,fig.height = 4, fig.width = 2}
+library(dplyr)
+library(forcats)
 mt_singer <- df %>%
   group_by(Singer) %>%
   summarise_at(vars(Metacritic_Score), list(mt_score = mean))
-mt_singer <- mt_singer[order(-mt_singer$mt_score), ][1:50, ]
+mt_singer <- mt_singer[order(-mt_singer$mt_score),][1:50,]
+
 
 mt_singer %>%
   ggplot(aes(x = mt_score, y = fct_reorder(Singer, mt_score))) +
   geom_point(color = "blue") +
   ggtitle("Top 50 metacritic score Artists(2018-2022)") +
-  theme(plot.title = element_text(size = 9, face = "bold")) +
+  theme(plot.title = element_text(size = 9, face = "bold"))+
   ylab("") +
-  xlab("metacritic score")
-theme_linedraw()
+  xlab("metacritic score") +
+  theme_linedraw()
+
+
 ```
 
 ## RYM
 ```{r}
-ggplot(df, aes(Release_Date, RYM_Rating)) +
-  geom_point(size = 0.02, alpha = 0.5) +
+rym = ggplot(df, aes(Release_Date, RYM_Rating)) + 
+  geom_point(size = 0.02, alpha = 0.5) + 
   labs(x = "Album Release Date", y = "Album Score on RYM") +
-  theme(axis.text.x = element_blank()) +
+  theme(axis.text.x = element_blank())+ 
   ggtitle("Album Score on RYM")
-```
 
-```{r}
-ggplot(df, aes(x = factor(Release_Year), y = RYM_Rating)) +
+rym_d = ggplot(df, aes(x=factor(Release_Year),y=RYM_Rating)) +
   geom_boxplot() +
   ggtitle("Album Score on RYM") +
-  labs(y = "Release Year", x = "Album Score on RYM")
+  labs(y="Release Year", x="Album Score on RYM")
+
+multiplot(rym,rym_d,cols = 2)
 ```
+
+
 ```{r,fig.height = 4, fig.width = 2}
 library(dplyr)
 library(forcats)
@@ -72,25 +79,191 @@ library(stringr)
 rym_singer <- df %>%
   group_by(Singer) %>%
   summarise_at(vars(RYM_Rating), list(rym_score = mean))
-rym_singer <- rym_singer[order(-rym_singer$rym_score), ][1:50, ]
+rym_singer <- rym_singer[order(-rym_singer$rym_score),][1:50,]
 
 rym_singer %>%
   ggplot(aes(x = rym_score, y = fct_reorder(Singer, rym_score))) +
   geom_point(color = "blue") +
   ggtitle("Top 50 RYM score Artists(2018-2022)") +
-  theme(plot.title = element_text(size = 5, face = "bold")) +
+  theme(plot.title = element_text(size = 5, face = "bold"))+
   ylab("") +
-  xlab("RYM score")
-theme_linedraw()
+  xlab("RYM score") +
+  theme_linedraw()
 rym_singer
+
 ```
 
 
 ```{r}
-ggplot(df, aes(Num_of_RYM_Ratings, RYM_Rating)) +
-  geom_point(size = 0.03, alpha = 0.5) +
+# 可以删掉
+ggplot(df, aes(Num_of_RYM_Ratings, RYM_Rating)) + 
+  geom_point(size = 0.03, alpha = 0.5) + 
   labs(x = "Number of Ratings", y = "Album Score on RYM") +
   ggtitle("Album Score on RYM")
 ```
+```{r}
+fig <- plot_ly(df, x = ~Num_of_RYM_Ratings, y = ~RYM_Rating, text = ~ Album_Name, color = ~Metacritic_Score, type = 'scatter', mode = 'markers', colors = 'YlOrBr',
+        sizes = c(10, 50),
+        marker = list(opacity = 0.9, sizemode = 'diameter'))
+fig <- fig %>% layout(title = 'Album Score on RYM',
+         xaxis = list(showgrid = FALSE),
+         yaxis = list(showgrid = FALSE),
+         showlegend = TRUE)
+
+fig
+```
+
+## Metacritic VS RYM
+```{r}
+ggplot(df, aes(Metacritic_Score, RYM_Rating)) + 
+  geom_point(size = 0.03, alpha = 0.5) + 
+  geom_smooth(colour = "purple2") +
+  labs(x = "Metacritic Score", y = "Rate Your Music Score") +
+  ggtitle("Metacritic vs Rate Your music")
+```
+
+```{r}
+df$Fct_Release_Year = as.character(df$Release_Year)
+
+ggplot(df, aes(Metacritic_Score, RYM_Rating, colour = Fct_Release_Year)) + 
+  geom_point(size = 0.03, alpha = 0.5) + 
+  geom_smooth() +
+  facet_wrap(~Fct_Release_Year)+
+  labs(x = "Metacritic Score", y = "Rate Your Music Score") +
+  ggtitle("Metacritic vs Rate Your music")
+```
+
+## Spotify
+
+```{r}
+ggplot(df, aes(Release_Date, max_pop)) + 
+  geom_point(size = 0.03, alpha = 0.5) + 
+  labs(x = "Release Year", y = "Spotify Popularity(max in an album)") +
+  theme(axis.text.x = element_blank())+
+  ggtitle("Spotify Popularity")
+```
+```{r}
+library(Rmisc)
+max = ggplot(df, aes(x=factor(Release_Year),y=max_pop)) +
+  geom_boxplot() +
+  ggtitle("Spotify Popularity(Maximum of Album)") +
+  labs(x="Release Year", y="Spotify Popularity(max)")
+avg = ggplot(df, aes(x=factor(Release_Year),y=avg_pop)) +
+  geom_boxplot() +
+  ggtitle("Spotify Popularity(Average of Album)") +
+  labs(x="Release Year", y="Spotify Popularity(avg)")
+min = ggplot(df, aes(x=factor(Release_Year),y=min_pop)) +
+  geom_boxplot() +
+  ggtitle("Spotify Popularity(Min of Album)") +
+  labs(x="Release Year", y="Spotify Popularity(min)")
+med = ggplot(df, aes(x=factor(Release_Year),y=med_pop)) +
+  geom_boxplot() +
+  ggtitle("Spotify Popularity(Median of Album)") +
+  labs(x="Release Year", y="Spotify Popularity(med)")
+
+multiplot(max,avg,min,med ,cols = 2)
+```
+
+```{r}
+library(GGally)
+ggparcoord(df, columns = c(16, 17,18,19), alpha=0.08,
+           title = "Parallel coordinate plot for Album Popularity()",
+           scale = "uniminmax")
+```
+！！这里有一个隐秘的trend，就是有一些maxpop和medpop很高，但是min——pop极低的专辑，这说明有些专辑内部pop方差很大（虽然大部分不是这样）。
+
+
+### Spotify Track
+```{r}
+colnames(sptf_tk)
+```
+
+```{r}
+library("ggcorrplot")
+my_data <- sptf_tk[, 4:16]
+corr <- round(cor(my_data, use="complete.obs"), 1)
+# Visualize
+ggcorrplot(corr, p.mat = cor_pmat(my_data),
+           hc.order = TRUE, type = "lower",
+           color = c("#FC4E07", "white", "#00AFBB"),
+           outline.col = "white", lab = TRUE)
+```
+
+```{r}
+
+inst = ggplot(sptf_tk, aes(instrumentalness, popularity)) + 
+  geom_point(size = 0.03, alpha = 0.5) + 
+  geom_smooth(colour = "purple2") +
+  labs(x = "Instrumentalness", y = "Popularity") +
+  ggtitle("Popularity vs Instrumentalness")
+
+dance = ggplot(sptf_tk, aes(danceability, popularity)) + 
+  geom_point(size = 0.03, alpha = 0.5) + 
+  geom_smooth(colour = "purple2") +
+  labs(x = "Danceability", y = "Popularity") +
+  ggtitle("Popularity vs Danceability")
+
+multiplot(inst,dance ,cols = 2)
+```
+
+
+
+## Spotify VS Metacritic VS RYM
+
+```{r}
+spt_rym = ggplot(df, aes(RYM_Rating, max_pop)) + 
+  geom_point(size = 0.03, alpha = 0.5) + 
+  labs(x = "Album Score on RYM", y = "Spotify_Popularity(max in an album)") +
+  geom_smooth(colour = "purple2") +
+  ggtitle("Spotify Popularity VS RYM Rating")
+
+spt_meta = ggplot(df, aes(Metacritic_Score, max_pop)) + 
+  geom_point(size = 0.03, alpha = 0.5) + 
+  labs(x = "Album Score on Metacritic", y = "Spotify_Popularity(max in an album)") +
+  geom_smooth(colour = "purple2") +
+  ggtitle("Spotify Popularity VS Metacritic Rating")
+
+multiplot(spt_rym,spt_meta,cols = 2)
+```
+```{r}
+ggplot(df, aes(RYM_Rating, max_pop,colour = Fct_Release_Year)) + 
+  geom_point(size = 0.03, alpha = 0.5) + 
+  labs(x = "Album Score on RYM", y = "Spotify_Popularity(max in an album)") +
+  geom_smooth(colour = "purple2") +
+  facet_wrap(~Fct_Release_Year) +
+  ggtitle("Spotify Popularity VS RYM Rating")
+```
+
+
+
+```{r}
+ggplot(df, aes(Metacritic_Score, max_pop,colour = Fct_Release_Year)) + 
+  geom_point(size = 0.03, alpha = 0.5) + 
+  labs(x = "Album Score on Metacritic", y = "Spotify_Popularity(max in an album)") +
+  geom_smooth(colour = "purple2") +
+  facet_wrap(~Fct_Release_Year) +
+  ggtitle("Spotify Popularity VS Metacritic Rating")
+```
+```{r}
+library(GGally)
+ggparcoord(df, columns = c(17,2,18,9,19), alpha=0.05,
+           title = "Parallel coordinate plot for Album Popularity and Ratings",
+           scale = "uniminmax")
+
+```
+
+
+```{r}
+library(GGally)
+ggparcoord(df, columns = c(17,2,18,9,19), alpha=0.1,groupColumn= "Fct_Release_Year",
+           title = "Parallel coordinate plot for Album Popularity and Ratings",
+           scale = "uniminmax") +
+  facet_wrap(~Fct_Release_Year)
+```
+
+```{r}
+colnames(df)
+```
+
 
 
