@@ -1,48 +1,15 @@
 ```{r}
 library(tidyverse)
-meta <- read.csv('data/metacritic_data_new.csv')
-rym <- read.csv('data/rym_new_2.csv')
-spotify <- read.csv('data/spotify_new.csv')
+meta <- read.csv('data/meta.csv') %>% select(-X)
+rym <- read.csv('data/rym.csv') %>% select(-X)
+spotify <- read.csv('data/spotify.csv') %>% select(-X)
 meta %>% summarise(n = n_distinct(id))
 ```
 
 ```{r}
 rym_minus <- rym %>%
-    select('id' = 'Id', 'RYM Rating' = 'RYM.Rating', 'Genres', 'Language', 'Tracks' = 'Track.listing', 'Colorscheme', 'RYM Rank' = 'Ranked', '#Ratings' = 'Num_of_RYM_Ratings')
+    select('id', 'RYM Rating' = 'RYM.Rating', 'Genres', 'Language', 'Tracks' = 'Track.listing', 'Colorscheme', 'RYM Rank' = 'Ranked', '#Ratings' = 'Num_of_RYM_Ratings')
 data <- merge(x = meta, y = rym_minus, by = 'id', all.x = TRUE)
 data <- merge(x = data, y = spotify, by = 'id', all.x = TRUE)
 write.csv(data, 'data/data.csv')
-```
-
-```{r}
-meta1 <- read.csv('data/metacritic_data_new.csv')
-meta1 <- meta1 %>% rename('old_id' = 'id')
-meta1 <- tibble::rowid_to_column(meta1, 'id')
-```
-
-```{r}
-rym1 <- read.csv('data/rym_new_2.csv') %>%
-    rename('old_id' = 'Id')
-meta_id <- meta1 %>%
-    select('id', 'old_id')
-rym1 <- merge(rym1, meta_id, by = 'old_id', all.x = TRUE)
-```
-
-```{r}
-spotify1 <- read.csv('data/spotify_new.csv') %>%
-    rename('old_id' = 'id')
-spotify1 <- merge(spotify1, meta_id, by = 'old_id', all.x = TRUE)
-```
-
-```{r}
-spotify1 <- select(spotify1, -old_id)
-view(spotify1)
-rym1 <- select(rym1, -old_id)
-meta1 <- select(meta1, -old_id)
-```
-
-```{r}
-write.csv(meta1,'meta.csv')
-write.csv(rym1,'rym.csv')
-write.csv(spotify1,'spotify.csv')
 ```
