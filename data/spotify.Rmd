@@ -1,0 +1,55 @@
+```{r}
+library(tidyverse)
+library(spotifyr)
+token <- read.csv("data/spotify_token")
+Sys.setenv(SPOTIFY_CLIENT_ID = token[1, 1])
+Sys.setenv(SPOTIFY_CLIENT_SECRET = token[1, 2])
+```
+
+```{r}
+access_token <- get_spotify_access_token()
+```
+
+```{r}
+# given album name and singer name, get stream popularity
+get_spotify_data <- function(album, singer) {
+  res <- search_spotify(paste(album, singer, sep = ", "), type = "album")[1, 5] %>%
+    get_album_tracks()
+  res <- get_tracks(res$id) %>%
+    group_by(album.name) %>%
+    summarise(
+      avg_pop = mean(popularity),
+      max_pop = max(popularity),
+      sum_pop = sum(popularity)
+    )
+  return(res)
+}
+```
+
+```{r}
+# for music in metacritic_data.csv get spotify popularity
+df <- read.csv("data/metacritic_data_new.csv")
+```
+
+```{r}
+not_matched <- 0
+spotify_data <- data.frame(matrix(ncol = 4, nrow = 0))
+
+for (i in 1:1) {
+  album_name <- df[i, "Album_Name"]
+  singer <- df[i, "Singer"]
+  tryCatch({
+    row <- get_spotify_data(album_name, singer)
+    spotify_data <- rbind(spotify_data, row)
+    print(c(i, '✅', singer, album_name))
+  }, error = function(e) {
+    not_matched <<- c(not_matched, i)
+    print(c(i, '❌', singer, album_name))
+  })
+}
+```
+
+```{r}
+# export to csv
+write.csv(spotify_data, "data/spotify_new.csv", row.names=FALSE)
+```
