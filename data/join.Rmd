@@ -1,0 +1,15 @@
+```{r}
+library(tidyverse)
+meta <- read.csv('data/metacritic_data_new.csv')
+rym <- read.csv('data/rym_new_2.csv')
+spotify <- read.csv('data/spotify_new.csv')
+meta %>% summarise(n = n_distinct(id))
+```
+
+```{r}
+rym_minus <- rym %>%
+    select('id' = 'Id', 'RYM Rating' = 'RYM.Rating', 'Genres', 'Language', 'Tracks' = 'Track.listing', 'Colorscheme', 'RYM Rank' = 'Ranked', '#Ratings' = 'Num_of_RYM_Ratings')
+data <- merge(x = meta, y = rym_minus, by = 'id', all.x = TRUE)
+data <- merge(x = data, y = spotify, by = 'id', all.x = TRUE)
+write.csv(data, 'data/data.csv')
+```
