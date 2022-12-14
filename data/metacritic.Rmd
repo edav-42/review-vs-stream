@@ -101,7 +101,7 @@ df <- df %>%
     "Album_Name" = "V3",
     "Singer" = "V4",
     "Release_Date" = "V5",
-    "Desciption" = "V7",
+    "Description" = "V7",
     "User_Score" = "V10",
     "Release_Year" = "Year"
   )
