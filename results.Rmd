@@ -93,5 +93,36 @@ ggplot(df, aes(X.Ratings, RYM.Rating)) +
   labs(x = "Number of Ratings", y = "Album Score on RYM") +
   ggtitle("Album Score on RYM")
 ```
+```{r}
+fig <- plot_ly(df, x = ~X.Ratings, y = ~RYM.Rating, text = ~ Album_Name, color = ~Metacritic_Score, type = 'scatter', mode = 'markers', colors = 'YlOrBr',
+        sizes = c(10, 50),
+        marker = list(opacity = 0.9, sizemode = 'diameter'))
+fig <- fig %>% layout(title = 'Album Score on RYM',
+         xaxis = list(showgrid = FALSE),
+         yaxis = list(showgrid = FALSE),
+         showlegend = TRUE)
+
+fig
+```
+
+## Metacritic VS Rate Your music
+```{r}
+ggplot(df, aes(Metacritic_Score, RYM.Rating)) + 
+  geom_point(size = 0.03, alpha = 0.5) + 
+  geom_smooth(colour = "darkred") +
+  labs(x = "Metacritic Score", y = "Rate Your Music Score") +
+  ggtitle("Metacritic vs Rate Your music")
+```
+
+```{r}
+df$Fct_Release_Year = as.character(df$Release_Year)
+
+ggplot(df, aes(Metacritic_Score, RYM.Rating, colour = Fct_Release_Year)) + 
+  geom_point(size = 0.03, alpha = 0.5) + 
+  geom_smooth() +
+  facet_wrap(~Fct_Release_Year)+
+  labs(x = "Metacritic Score", y = "Rate Your Music Score") +
+  ggtitle("Metacritic vs Rate Your music")
+```
 
 
