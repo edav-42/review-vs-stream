@@ -26,5 +26,38 @@ names(data)
 
 ```{r fig.width=10}
 mi::missing_data.frame(data)
+names(data) <- abbreviate(gsub("_", "", names(data)), minlength = 3)
 plot_missing(data, percent = F)
 ```
+
+As we can see, there are only few values missing. This is due to the "search" nature of our collecting method. We get the matched results from some search engines; since it is rare for search engines to return an empty list, and we relax the matching criteria, values are rarely missing.
+
+Also, the missing patterns are very clear:
+
+1. If we cannot find an album on Spotify, then the data on its tracks are all missing; this includes `avg_pop, max_pop, min_pop, med_pop, n`.
+    - The missing albums on spotify are due to copyrights restrictions. For example, the band Belly removed their album "Dove" from Spotify. All of these albums can be searched on Spotify, but no tracks information are offered.
+2. If an album gets no ratings on RYM, its `RYM_Rating` and `Num_of_RYM_Ratings` are both missing.
+    - There are two albums we found on RYM but with no `RYM_Rating` and `Num_of_RYM_Ratings`:
+        - "Get Up Sequences, Pt. 1" by The Go! Team. On RYM, the title of this album is "Get Up Sequences Part One", and the artist has another album called "Get Up Sequences Part Two" comming up. Since our algorithm doesn't know "1" is "One", it returned the wrong, unreleased album, which has no ratings.
+        - "MOSS" by Maya Hawke. This is an internal error of RYM: the page of "MOSS" <https://rateyourmusic.com/release/album/maya-hawke/moss> leads to a wrong page which has no rating
+3. If we cannot find an album on RYM, then the data offered by RYM is missing; this includes `RYM_Rating, Num_of_RYM_Ratings, Genres, Language, Tracks, Colorscheme, RYM_Rank`.
+   - There is only one album we cannot find on RYM: "Pulse/Quartet" by Steve Reich.
+
+<!-- TODO
+Missing values of spotify_tracks
+ -->
+
+However, **complete** data doesn't mean **correct** data.
+There is no such thing as a free lunch.
+The completeness of our data provided by the "search" nature of our data collecting method also raise the probability of returning a **wrong** data, when the data *should be missing*.
+
+For example, we use the first album returned by the Spotify search API as our observation. However, if the album doesn't exist on Spotify, it may still return some related results. Then we collect the wrong data.
+Such senarios are more often when using RYM API.
+For example, "Halloween [Original 2018 Motion Picture Soundtrack]" by John Carpenter in the Metacritic chart is a 2018 soundtrack which is not included by RYM. However, this album has many older versions, so the RYM API returns an older version which is released in 1983.
+Some other examples includes that the album in the Metacritic chart is a new live version which is not included by RYM, so the RYM API returns the studio version.
+
+![](assets/2022-12-14-15-19-10.png)
+
+Also, we are exploring the "art" world; artists are full of creative ideas to name themself and their albums. Therefore, there are relatively more edge cases where we will get the wrongly-matched data.
+
+However, it is hard to consider all the edge cases and eliminate the wrong data. It is our next steps to reduce the error possibility.
