@@ -53,7 +53,7 @@ def get_url_from_album_name(browser, name: str) -> str:
 
         url_match = artist_album_url[
             artist_album_name.index(
-                get_close_matches_icase(album_name, artist_album_name)[0]
+                get_close_matches_icase(album_name, artist_album_name, cutoff=0.4)[0]
             )
         ]
     except:
