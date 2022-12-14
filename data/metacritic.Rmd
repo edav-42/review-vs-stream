@@ -116,19 +116,7 @@ df$Rank <- as.integer(df$Rank)
 df$Release_Date <- as.Date(df$Release_Date, format = "%B %d, %Y")
 df$User_Score <- as.numeric(df$User_Score, NA)
 # add uid
-to_lower_alnum <- function(s) {
-  tolower(gsub("[^[:alnum:]]", "", s))
-}
-strip_album_name <- function(s) {
-  paste(substr(s,1,3), substr(s, nchar(s)-2, nchar(s)), sep = "")
-}
-df <- df %>%
-  mutate(id = paste(
-    to_lower_alnum(Singer),
-    Release_Year,
-    strip_album_name(to_lower_alnum(Album_Name)),
-    sep = ""
-  ))
+df <- tibble::rowid_to_column(df, 'id')
 
 summary(df)
 ```
