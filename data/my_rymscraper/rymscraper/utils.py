@@ -39,6 +39,24 @@ def get_url_from_album_name(browser, name: str) -> str:
     album_name = urllib.parse.unquote(album_name).strip()
     artist_name = name.split("-")[0].strip()
     try:
+        artist_url = get_url_from_artist_name(browser, artist_name)
+
+        logger.debug("Searching for %s at %s", album_name, artist_url)
+        browser.get_url(artist_url)
+        soup = browser.get_soup()
+        artist_album_list = [
+            [x.text.strip(), "https://rateyourmusic.com" + x.find("a")["href"]]
+            for x in soup.find_all("div", {"class": "disco_mainline"})
+        ]
+        artist_album_url = [x[1] for x in artist_album_list]
+        artist_album_name = [x[0] for x in artist_album_list]
+
+        url_match = artist_album_url[
+            artist_album_name.index(
+                get_close_matches_icase(album_name, artist_album_name)[0]
+            )
+        ]
+    except:
         url = f"{base_url}/search?searchtype=l&searchterm={name}"
         # logger.debug("Searching %s in url %s", album_name, url)
         browser.get_url(url)
@@ -57,25 +75,7 @@ def get_url_from_album_name(browser, name: str) -> str:
                 get_close_matches_icase(album_name, artist_album_name)[0]
             )
         ]
-    except:
-        artist_url = get_url_from_artist_name(browser, artist_name)
-
-        logger.debug("Searching for %s at %s", album_name, artist_url)
-        browser.get_url(artist_url)
-        soup = browser.get_soup()
-        artist_album_list = [
-            [x.text.strip(), "https://rateyourmusic.com" + x.find("a")["href"]]
-            for x in soup.find_all("div", {"class": "disco_mainline"})
-        ]
-        artist_album_url = [x[1] for x in artist_album_list]
-        artist_album_name = [x[0] for x in artist_album_list]
-
-        url_match = artist_album_url[
-            artist_album_name.index(
-                get_close_matches_icase(album_name, artist_album_name)[0]
-            )
-        ]
-
+        
     logger.debug("Best match : %s", url_match)
     return url_match
 
