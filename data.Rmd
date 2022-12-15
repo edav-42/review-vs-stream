@@ -15,13 +15,13 @@ library(redav)
 
 ## Sources
 
-We first scrapped album ratings from [Metacritic](https://metacritic.com), a famous and reliable website that aggregates reviews and ratings for music albums. We scrapped the critic ratings for albums released between 2018 and 2022(inclusive) and concatenate them to one table.
+We first scrapped album ratings from [Metacritic](https://metacritic.com), a famous and reliable website that aggregates reviews and ratings for music albums. We scrapped the critic ratings for albums released between 2018 and 2022(inclusive) and concatenate them to one table.(Please see [metacritic.Rmd](data/metacritic.Rmd) for scraping and cleaning code)
 
-Based on the albums and artist name we got from the Metacritic website, we collected the user rating of corresponding albums from [Rate Your Music (RYM)](https://rateyourmusic.com), which is the largest community-driven online music database. To be specific, we query each albums by its name and artist through an unofficial API [rymscraper](https://github.com/dbeley/rymscraper).
+Based on the albums and artist name we got from the Metacritic website, we collected the user rating of corresponding albums from [Rate Your Music (RYM)](https://rateyourmusic.com), which is the largest community-driven online music database. To be specific, we query each albums by its name and artist through an unofficial API [rymscraper](https://github.com/dbeley/rymscraper). (Please see [rym.ipynb](data/rym.ipynb) for querying and cleaning code)
 
-For the user popularity of each album, we collect popularity from [Spotify official APIs](https://developer.spotify.com/documentation/web-api/reference/#/operations/get-track). Since Spotify provides the popularity of each track in an album, we records the avg, mean, median, and max popularity of all tracks in a album for each album.
+For the user popularity of each album, we collect popularity from [Spotify official APIs](https://developer.spotify.com/documentation/web-api/reference/#/operations/get-track). Since Spotify provides the popularity of each track in an album, we records the avg, mean, median, and max popularity of all tracks in a album for each album. (Please see [spotify.Rmd](data/spotify.Rmd) for querying and cleaning code)
 
-Additionally, we also collect the features of all songs that appears in the album that we collected before. That is, we have a new table to save the duration, name, popularity, acousticness, danceability, energy, instrumentalness, key, liveness, loudness, mode, speechiness, tempo, time_signature and valence of each song/track.
+Additionally, we also collect the features of all songs that appears in the album that we collected before. That is, we have a new table to save the duration, name, popularity, acousticness, danceability, energy, instrumentalness, key, liveness, loudness, mode, speechiness, tempo, time_signature and valence of each song/track.(Please see [spotify_tracks.Rmd](data/spotify_tracks.Rmd) for querying and cleaning code)
 
 Because the raw data is not so clean and showing them directly would be a disaster, we prefer introduce the types of variables and other information of these data set during&after cleaning and transformation. :)
 
