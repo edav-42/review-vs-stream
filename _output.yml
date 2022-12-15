@@ -1,5 +1,3 @@
-#html_document:
-  #toc: true
 bookdown::gitbook:
   css: style.css
   config:
