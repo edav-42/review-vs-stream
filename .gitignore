@@ -6,4 +6,4 @@ data/spotify_token
 .DS_Store
 data/geckodriver.log
 libs/
-*.html
+
