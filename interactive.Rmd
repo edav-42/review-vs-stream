@@ -1,3 +1,78 @@
 # Interactive component
 
+This section allow users to intractively explore the relationship between the review and popularity of albums.
+We selected top 100 albums on Metacritic in 2022.
+We also present the relationship between the review and other aspects like danceability and energy. The possibilities are unlimited.
 
+On the left half of the page, we rank the albums according to the Metacritic chart. The right half of the page is interactive.
+First, it present the **average popularity** of the album on Spotify in a way that resembles a Cleveland dot plot.
+As we can discover, *locally*, there is no strong association between the review rank and the average popularity. However, when we broaden our horizon to the whole chart, we can see a clear trend that albums with higher review rank are more popular.
+
+Moreover, users can click on the circle representing an album. Then the circle will expand to a popularity **range** of the tracks in that album. This provides more detailed information about the popularity of the album.
+Also, when users hover on the circle representing a track, it will show the track name.
+
+With this intractive gragh, users can easily figure out the review rank, average popularity of an album, and popularity of specific tracks. These dimensions cannot be easily presented in a static graph without clustering the graph.
+
+We also provide two other aspects: danceability and energy. After clicking on the buttons on the top, the graph will transition to present another aspect.
+
+<head>
+    <title>Review VS Popularity</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body>
+    <h1>Review VS Popularity & ...</h1>
+    <p class="buttons">
+        <button type="button" id="popularity" value="popularity" class="button">Popularity</button>
+        <button type="button" id="danceability" value="danceability" class="button">Danceability</button>
+        <button type="button" id="energy" value="energy" class="button">Energy</button>
+    </p>
+    <svg width="1000" height="3000"></svg>
+    <script src="assets/rvp.js"></script>
+</body>
+<div class="info">
+</div>
+<style>
+    svg {
+        position: absolute;
+    }
+    text {
+        font-size: 12px;
+    }
+    .line {
+        fill: none;
+        stroke: gainsboro;
+        stroke-width: 1.5px;
+        opacity: 0.3;
+        z-index: -1;
+    }
+    #head,
+    .button {
+        font-weight: bold;
+        border-radius:3px; 
+        -moz-border-radius:3px; 
+        -webkit-border-radius:3px;
+        border:none;
+    }
+    .buttons {
+        position: relative;
+        left: 500px;
+        top: 0px;
+        width: 400px;
+        display: flex;
+        justify-content: space-around;
+    }
+    .info {
+        visibility: hidden;
+        position: relative;
+        width: fit-content;
+        background-color: whitesmoke;
+        border: 1px solid gray;
+        border-radius: 5px;
+        padding: 5px;
+        font-style: italic;
+        font-size: 12px;
+    }
+</style>
+
+</html>

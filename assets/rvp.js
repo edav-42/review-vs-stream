@@ -11,6 +11,8 @@ d3.csv('https://raw.githubusercontent.com/edav-42/review-vs-stream/main/data/d3_
 		{ text: 'Artist', x: 300, y: 50 },
 		// { text: 'Popularity', x: 500, y:20 }
 	];
+	const meanSize = 6.5;
+	const trackSize = 5;
 
 	// Scale
 	const axisScale = d3.scaleLinear()
@@ -65,9 +67,25 @@ d3.csv('https://raw.githubusercontent.com/edav-42/review-vs-stream/main/data/d3_
 		.attr('y', (d, i) => i * 22 + 80)
 		.attr('width', 20)
 		.text(d => d.value[0].Singer)
+	
+	svg.append('g')
+		.attr('id', 'mean')
 
+	function pickMeanColor(aspect) {
+		if (aspect == 'popularity') {
+			return 'rgb(0, 122, 255)'
+		} else if (aspect == 'danceability') {
+			return 'rgb(255, 189, 50)'
+		} else if (aspect == 'energy') {
+			return 'rgb(255, 0, 0)'
+		}
+	}
 
-	function renderAspect(aspect) {
+	d3.select('.button[id="popularity"]').style('background', 'rgba(0, 122, 255, 0.3)');
+	d3.select('.button[id="danceability"]').style('background', 'rgba(255, 189, 50, 0.3)');
+	d3.select('.button[id="energy"]').style('background', 'rgba(255, 0, 0, 0.3)');
+
+	function renderAspect(aspect, transDuration) {
 		const maxPop = (aspect == 'popularity' ? 100 : 1); //d3.max(garray, v => d3.max(v.value, z => z.popularity));
 		const minPop = 0; //d3.min(garray, v => d3.min(v.value, z => z.popularity));
 		const popScale = d3.scaleLinear()
@@ -90,24 +108,18 @@ d3.csv('https://raw.githubusercontent.com/edav-42/review-vs-stream/main/data/d3_
 		// 		.attr('width', d => (d3.max(d.value, v => v.popularity) - d3.min(d.value, v => v.popularity)) * 3)
 		// 		.attr('fill', 'lightblue')
 
-		function pickMeanColor(aspect) {
-			if (aspect == 'popularity') {
-				return 'rgb(0, 122, 255)'
-			} else if (aspect == 'danceability') {
-				return 'rgb(255, 80, 0)'
-			} else if (aspect == 'energy') {
-				return 'rgb(255, 0, 0)'
-			}
-		}
-		svg.append('g')
-			.attr('id', 'mean')
-			.selectAll('circle')
-			.data(garray)
-			.enter()
+		const means = d3.select('g#mean')
+			.selectAll('circle.mean')
+			.data(garray);
+		means.enter()
 				.append('circle')
+				.attr('class', 'mean')
+			.merge(means)
+				.transition()
+				.duration(transDuration)
 				.attr('cx', d => popScale(d3.mean(d.value, v => v[aspect])))
-				.attr('cy', (d, i) => i * 22 + 75)
-				.attr('r', '8')
+				.attr('cy', (d, i) => i * 22 + 77)
+				.attr('r', meanSize)
 				.attr('fill', pickMeanColor(aspect))
 		
 		const mean_circ = d3.select('#mean').selectAll('circle')
@@ -124,7 +136,7 @@ d3.csv('https://raw.githubusercontent.com/edav-42/review-vs-stream/main/data/d3_
 				if (aspect == 'popularity') {
 					return `0, 122, ${colorScale(d)}`
 				} else if (aspect == 'danceability') {
-					return `${colorScale(d)}, 80, 0`
+					return `${colorScale(d) / 255 * 100 + 125}, 179, 50`
 				} else if (aspect == 'energy') {
 					return `${colorScale(d)}, 0, 0`
 				}
@@ -144,11 +156,11 @@ d3.csv('https://raw.githubusercontent.com/edav-42/review-vs-stream/main/data/d3_
 					.attr('class', 'track')
 					.attr('cx', cx)
 					.attr('cy', cy)
-					.attr('r', '5')
+					.attr('r', meanSize)
 					.attr('fill', d => "rgba("+ pickTrackColor(aspect, d[aspect]) + ", 0.7)")
 					.transition()
 					.duration(200)
-					.attr('r','6')
+					.attr('r',trackSize)
 					.transition()
 					.duration(500)
 					.attr('cx', d => popScale(d[aspect]));
@@ -174,7 +186,7 @@ d3.csv('https://raw.githubusercontent.com/edav-42/review-vs-stream/main/data/d3_
 					.duration(50)
 					.style('visibility', 'visible')
 					.style('left', (x + 10) + "px")
-					.style('top', (y + 40) + "px");
+					.style('top', (y + 10) + "px");
 			track.on('mouseout', function() {
 				info.style('visibility', 'hidden');
 			})
@@ -184,13 +196,13 @@ d3.csv('https://raw.githubusercontent.com/edav-42/review-vs-stream/main/data/d3_
 		const info = d3.select('.info');
 	}
 
-	renderAspect('popularity');
+	renderAspect('popularity', 0);
 	// Buttons
 	d3.selectAll('.button')
 		.on('click', function(event) {
-			d3.select('#mean').remove();
+			// d3.select('#mean').remove();
 			d3.selectAll('.track').remove();
 			d3.selectAll('.line').remove();
-			renderAspect(event.currentTarget.value);
+			renderAspect(event.currentTarget.value, 500);
 		})
 })
