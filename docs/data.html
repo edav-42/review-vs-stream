@@ -23,7 +23,7 @@
 <meta name="author" content="Yihan Chen, Chenyu Zhang" />
 
 
-<meta name="date" content="2022-12-14" />
+<meta name="date" content="2022-12-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,6 +52,13 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.10.1/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
 
 
 
@@ -86,10 +93,26 @@
 <li class="chapter" data-level="3" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>3</b> Data</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="data.html"><a href="data.html#sources"><i class="fa fa-check"></i><b>3.1</b> Sources</a></li>
-<li class="chapter" data-level="3.2" data-path="data.html"><a href="data.html#cleaning-transformation"><i class="fa fa-check"></i><b>3.2</b> Cleaning / transformation</a></li>
+<li class="chapter" data-level="3.2" data-path="data.html"><a href="data.html#cleaning-transformation"><i class="fa fa-check"></i><b>3.2</b> Cleaning / transformation</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="data.html"><a href="data.html#metacritic-data"><i class="fa fa-check"></i><b>3.2.1</b> Metacritic Data</a></li>
+<li class="chapter" data-level="3.2.2" data-path="data.html"><a href="data.html#rate-your-music"><i class="fa fa-check"></i><b>3.2.2</b> Rate Your Music</a></li>
+<li class="chapter" data-level="3.2.3" data-path="data.html"><a href="data.html#spotify"><i class="fa fa-check"></i><b>3.2.3</b> Spotify</a></li>
+<li class="chapter" data-level="3.2.4" data-path="data.html"><a href="data.html#final-data-set"><i class="fa fa-check"></i><b>3.2.4</b> Final Data Set</a></li>
+</ul></li>
 <li class="chapter" data-level="3.3" data-path="data.html"><a href="data.html#missing-value-analysis"><i class="fa fa-check"></i><b>3.3</b> Missing value analysis</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Results</a></li>
+<li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Results</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="results.html"><a href="results.html#metacritic"><i class="fa fa-check"></i><b>4.1</b> Metacritic</a></li>
+<li class="chapter" data-level="4.2" data-path="results.html"><a href="results.html#rym"><i class="fa fa-check"></i><b>4.2</b> RYM</a></li>
+<li class="chapter" data-level="4.3" data-path="results.html"><a href="results.html#metacritic-vs-rym"><i class="fa fa-check"></i><b>4.3</b> Metacritic VS RYM</a></li>
+<li class="chapter" data-level="4.4" data-path="results.html"><a href="results.html#spotify-1"><i class="fa fa-check"></i><b>4.4</b> Spotify</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="results.html"><a href="results.html#spotify-track"><i class="fa fa-check"></i><b>4.4.1</b> Spotify Track</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="results.html"><a href="results.html#spotify-vs-metacritic-vs-rym"><i class="fa fa-check"></i><b>4.5</b> Spotify VS Metacritic VS RYM</a></li>
+</ul></li>
 <li class="chapter" data-level="5" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>5</b> Interactive component</a></li>
 <li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -115,47 +138,404 @@
 <h1><span class="header-section-number">Chapter 3</span> Data<a href="data.html#data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="sources" class="section level2 hasAnchor" number="3.1">
 <h2><span class="header-section-number">3.1</span> Sources<a href="data.html#sources" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We first scrapped album ratings from <a href="https://metacritic.com">Metacritic</a>, a famous and reliable website that aggregates reviews and ratings for music albums. We scrapped the critic ratings for albums released between 2018 and 2022(inclusive) and concatenate them to one table.(Please see <a href="data/metacritic.Rmd">metacritic.Rmd</a> for scraping and cleaning code)</p>
+<p>Based on the albums and artist name we got from the Metacritic website, we collected the user rating of corresponding albums from <a href="https://rateyourmusic.com">Rate Your Music (RYM)</a>, which is the largest community-driven online music database. To be specific, we query each albums by its name and artist through an unofficial API <a href="https://github.com/dbeley/rymscraper">rymscraper</a>. (Please see <a href="data/rym.ipynb">rym.ipynb</a> for querying and cleaning code)</p>
+<p>For the user popularity of each album, we collect popularity from <a href="https://developer.spotify.com/documentation/web-api/reference/#/operations/get-track">Spotify official APIs</a>. Since Spotify provides the popularity of each track in an album, we records the avg, mean, median, and max popularity of all tracks in a album for each album. (Please see <a href="data/spotify.Rmd">spotify.Rmd</a> for querying and cleaning code)</p>
+<p>Additionally, we also collect the features of all songs that appears in the album that we collected before. That is, we have a new table to save the duration, name, popularity, acousticness, danceability, energy, instrumentalness, key, liveness, loudness, mode, speechiness, tempo, time_signature and valence of each song/track.(Please see <a href="data/spotify_tracks.Rmd">spotify_tracks.Rmd</a> for querying and cleaning code)</p>
+<p>Because the raw data is not so clean and showing them directly would be a disaster, we prefer introduce the types of variables and other information of these data set during&amp;after cleaning and transformation. :)</p>
 </div>
 <div id="cleaning-transformation" class="section level2 hasAnchor" number="3.2">
 <h2><span class="header-section-number">3.2</span> Cleaning / transformation<a href="data.html#cleaning-transformation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="metacritic-data" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Metacritic Data<a href="data.html#metacritic-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>As we can see from below, the raw data we scrapped from the <a href="https://metacritic.com">Metacritic</a>, it is not so clean. The data doesn’t have proper column name and some columns are useless in the following analysis. And more importantly, the data type of all columns are characters.</p>
+<p><img src="assets/mt1.png" /></p>
+<p>Thus, before analyzing, we did data cleaning to the Metacritic data set:</p>
+<ol style="list-style-type: decimal">
+<li>Delete useless columns: V6, V8, V9 are useless because of either containing duplicate data or having long text that is not helpful.</li>
+<li>Rename left columns: according to the meaning of each row, we rename the columns as “Metacritic_Score”, “Rank”, “Album_Name”, “Singer”, “Release_Date”, “Description”, “User_Score”, “Release_Year”</li>
+<li>Transform the data</li>
+</ol>
+<ul>
+<li>Metacritic_Score &amp; Rank: transform them from type char to type int for future analysis.</li>
+<li>Singer: contains redundant characters “by”, e.g. “by Fiona Apple”. Extract only the artist name, e.g. “Fiona Apple”</li>
+<li>User_Score: transform is from type char to type float for future analysis.</li>
+<li>Release_Date: it is originally in char type, e.g. “April 17, 2020”. Transform it to R datetime type, e.g. 2020-04-17</li>
+<li>id: for future usage(joining different dataframe)</li>
+</ul>
+<p>After transformation and cleaning, the Metacritic data contains 2275 observations of 9 different variables.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Variable Name</th>
+<th>Data Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>id</td>
+<td>int</td>
+<td>album id</td>
+</tr>
+<tr class="even">
+<td>Metacritic_Score</td>
+<td>int</td>
+<td>critic rating on Metacritic</td>
+</tr>
+<tr class="odd">
+<td>Rank</td>
+<td>int</td>
+<td>rank in release year</td>
+</tr>
+<tr class="even">
+<td>Album_Name</td>
+<td>chr</td>
+<td>album name</td>
+</tr>
+<tr class="odd">
+<td>Singer</td>
+<td>chr</td>
+<td>album artist</td>
+</tr>
+<tr class="even">
+<td>Release_Date</td>
+<td>Datetime</td>
+<td>album release date</td>
+</tr>
+<tr class="odd">
+<td>Description</td>
+<td>chr</td>
+<td>album description</td>
+</tr>
+<tr class="even">
+<td>User_Score</td>
+<td>num</td>
+<td>album user score</td>
+</tr>
+<tr class="odd">
+<td>Release_Year</td>
+<td>int</td>
+<td>album release year</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="rate-your-music" class="section level3 hasAnchor" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> Rate Your Music<a href="data.html#rate-your-music" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>As we can see from the snapshot of the description of sample album of the raw data we collected from <a href="https://rateyourmusic.com">Rate Your Music (RYM)</a>, the data is messy.</p>
+<p><img src="assets/rym1.png" /></p>
+<p>Before conducting merging, data need cleaning and transformation.</p>
+<ol style="list-style-type: decimal">
+<li>Delete useless columns: Type, Recorded are useless because they contain duplicate data.</li>
+<li>New column: We found that “RYM Rating” is in charcter type and contains not only ratings but also number of people who rate the album. Therefore, we extract the number of ratings and create a new column named “Num_of_RYM_Ratings”</li>
+<li>Transform the data</li>
+</ol>
+<ul>
+<li>Released: it is originally in char type, e.g. “14 September 2018”. Transform it to R datetime type, e.g. 2018-09-14</li>
+<li>RYM Rating: Extract ratings from characters and change the data type to numerate.</li>
+<li>id: for future usage(joining different dataframe)</li>
+<li>reserve the left data and transform them in the future if needed.</li>
+</ul>
+<p>After transformation and cleaning, the RYM data contains 2275 observations of 13 different variables.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Variable Name</th>
+<th>Data Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>id</td>
+<td>int</td>
+<td>album id</td>
+</tr>
+<tr class="even">
+<td>RYM.Rating</td>
+<td>int</td>
+<td>user rating on RYM</td>
+</tr>
+<tr class="odd">
+<td>Ranked</td>
+<td>chr</td>
+<td>rank in release year</td>
+</tr>
+<tr class="even">
+<td>Name</td>
+<td>chr</td>
+<td>album name</td>
+</tr>
+<tr class="odd">
+<td>Artist</td>
+<td>chr</td>
+<td>album artist</td>
+</tr>
+<tr class="even">
+<td>Released</td>
+<td>Datetime</td>
+<td>album release date</td>
+</tr>
+<tr class="odd">
+<td>Descriptors</td>
+<td>chr</td>
+<td>album description</td>
+</tr>
+<tr class="even">
+<td>Track.listing</td>
+<td>chr</td>
+<td>tracks in album</td>
+</tr>
+<tr class="odd">
+<td>Release_Year</td>
+<td>int</td>
+<td>album release year</td>
+</tr>
+<tr class="even">
+<td>Genres</td>
+<td>chr</td>
+<td>album genre</td>
+</tr>
+<tr class="odd">
+<td>Language</td>
+<td>chr</td>
+<td>song language</td>
+</tr>
+<tr class="even">
+<td>Colorscheme</td>
+<td>chr</td>
+<td>album colorscheme</td>
+</tr>
+<tr class="odd">
+<td>Num_of_RYM_Ratings</td>
+<td>int</td>
+<td>number of users who rate the album</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="spotify" class="section level3 hasAnchor" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> Spotify<a href="data.html#spotify" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The data we get from <a href="https://developer.spotify.com/documentation/web-api/reference/#/operations/get-track">Spotify official APIs</a> is quite clean. Thus we will directly introduce the variables.</p>
+<p>The album data set contains 2275 observations of 6 different variables.</p>
+<table>
+<colgroup>
+<col width="20%" />
+<col width="14%" />
+<col width="64%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable Name</th>
+<th>Data Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>id</td>
+<td>int</td>
+<td>album id</td>
+</tr>
+<tr class="even">
+<td>avg_pop</td>
+<td>num</td>
+<td>average popularity of all tracks in this album</td>
+</tr>
+<tr class="odd">
+<td>max_pop</td>
+<td>int</td>
+<td>max popularity among all tracks in this album</td>
+</tr>
+<tr class="even">
+<td>min_pop</td>
+<td>int</td>
+<td>min popularity among all tracks in this album</td>
+</tr>
+<tr class="odd">
+<td>med_pop</td>
+<td>num</td>
+<td>median popularity of all tracks in this album</td>
+</tr>
+<tr class="even">
+<td>n</td>
+<td>int</td>
+<td>number od tracks in this album</td>
+</tr>
+</tbody>
+</table>
+<p>The data set for tracks contains 26834 observations of 16 different variables.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Variable Name</th>
+<th>Data Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>id</td>
+<td>int</td>
+<td>album id</td>
+</tr>
+<tr class="even">
+<td>track_id</td>
+<td>chr</td>
+<td>id for tracking</td>
+</tr>
+<tr class="odd">
+<td>duration_ms</td>
+<td>int</td>
+<td>duration of each song in ms</td>
+</tr>
+<tr class="even">
+<td>name</td>
+<td>chr</td>
+<td>name of song</td>
+</tr>
+<tr class="odd">
+<td>popularity</td>
+<td>int</td>
+<td>popularity</td>
+</tr>
+<tr class="even">
+<td>acousticness</td>
+<td>int</td>
+<td>acousticness</td>
+</tr>
+<tr class="odd">
+<td>danceability</td>
+<td>num</td>
+<td>danceability</td>
+</tr>
+<tr class="even">
+<td>energy</td>
+<td>num</td>
+<td>energy</td>
+</tr>
+<tr class="odd">
+<td>instrumentalness</td>
+<td>num</td>
+<td>instrumentalness</td>
+</tr>
+<tr class="even">
+<td>key</td>
+<td>int</td>
+<td>key</td>
+</tr>
+<tr class="odd">
+<td>liveness</td>
+<td>num</td>
+<td>liveness</td>
+</tr>
+<tr class="even">
+<td>loudness</td>
+<td>num</td>
+<td>loudness</td>
+</tr>
+<tr class="odd">
+<td>mode</td>
+<td>int</td>
+<td>mode</td>
+</tr>
+<tr class="even">
+<td>speechiness</td>
+<td>num</td>
+<td>speechiness</td>
+</tr>
+<tr class="odd">
+<td>tempo</td>
+<td>num</td>
+<td>tempo</td>
+</tr>
+<tr class="even">
+<td>time_signature</td>
+<td>int</td>
+<td>time_signature</td>
+</tr>
+<tr class="odd">
+<td>valence</td>
+<td>num</td>
+<td>valence</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="final-data-set" class="section level3 hasAnchor" number="3.2.4">
+<h3><span class="header-section-number">3.2.4</span> Final Data Set<a href="data.html#final-data-set" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>After cleaning data set from each website/API, we concatenate 3 album-level data set by “id”, which was generated during the query to API and was based on combination of album name and artist name.</p>
+<p>The final album data set has 2275 observations of 20 variables.(For duplicate columns, we only conserve 1 column in the final data set)</p>
+<p>The following picture is for a rough look. Please see <a href="assets/df1.png">this</a> for a detailed look.</p>
+<p><img src="assets/df1.png" /></p>
+<p>Remember that we also have a track-level data set from Spotify. We will have exploratory data analysis based on it later.</p>
+</div>
 </div>
 <div id="missing-value-analysis" class="section level2 hasAnchor" number="3.3">
 <h2><span class="header-section-number">3.3</span> Missing value analysis<a href="data.html#missing-value-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<pre><code>##   X id Metacritic_Score Rank                          Album_Name
-## 1 1  1               93    1                             Room 25
-## 2 2  2               92    2 Time Will Die and Love Will Bury It
-## 3 3  3               90    3                           Holy Hell
-## 4 4  4               89    4                               Honey
-## 5 5  5               89    5           Safe In The Hands Of Love
-## 6 6  6               89    6                         Golden Hour
-##            Singer Release_Date
-## 1          Noname   2018-09-14
-## 2    Rolo Tomassi   2018-03-02
-## 3      Architects   2018-11-09
-## 4           Robyn   2018-10-26
-## 5      Yves Tumor   2018-09-05
-## 6 Kacey Musgraves   2018-03-30
-##                                                                                                                                                                             Desciption
-## 1                                                                                            The debut full-length release for the Los Angeles-based Chicago rapper was self-released.
-## 2                                                                                The fifth full-length studio release for the British rock band was recorded and mixed by Lewis Johns.
-## 3                                                       The eighth full-length release for the British metalcore band is its first without Tom Searle, who passed away in August 2016.
-## 4 The first full-length release in eight years for the Swedish  artist features contributions from with Joseph Mount of Metronomy, Klas Åhlund, Adam Bainbridge, Mr. Tophat, and Zhal.
-## 5                                                                           The surprise release from the experimental artist from Tennessee features a guest appearance from James K.
-## 6                                                               The seventh full-length release for the country singer-songwriter was co-produced with Daniel Tashian and Ian Fitchuk.
-##   User_Score Release_Year RYM.Rating Genres Language Tracks Colorscheme
-## 1        8.4         2018         NA     NA       NA     NA          NA
-## 2        7.3         2018         NA     NA       NA     NA          NA
-## 3        8.7         2018         NA     NA       NA     NA          NA
-## 4        8.5         2018         NA     NA       NA     NA          NA
-## 5        8.0         2018         NA     NA       NA     NA          NA
-## 6        8.7         2018         NA     NA       NA     NA          NA
-##   RYM.Rank X.Ratings  avg_pop max_pop min_pop med_pop  n
-## 1       NA        NA 37.54545      51      32    36.0 11
-## 2       NA        NA 25.40000      37      18    25.0 10
-## 3       NA        NA 48.00000      60      42    46.0 11
-## 4       NA        NA 36.33333      45      29    34.0  9
-## 5       NA        NA 34.40000      50      25    33.5 10
-## 6       NA        NA 59.07692      69      48    58.0 13</code></pre>
+<pre><code>##  [1] &quot;id&quot;                 &quot;Metacritic_Score&quot;   &quot;Rank&quot;              
+##  [4] &quot;Album_Name&quot;         &quot;Singer&quot;             &quot;Release_Date&quot;      
+##  [7] &quot;Desciption&quot;         &quot;Release_Year&quot;       &quot;RYM_Rating&quot;        
+## [10] &quot;Genres&quot;             &quot;Language&quot;           &quot;Tracks&quot;            
+## [13] &quot;Colorscheme&quot;        &quot;RYM_Rank&quot;           &quot;Num_of_RYM_Ratings&quot;
+## [16] &quot;avg_pop&quot;            &quot;max_pop&quot;            &quot;min_pop&quot;           
+## [19] &quot;med_pop&quot;            &quot;n&quot;</code></pre>
+<pre><code>## NOTE: The following pairs of variables appear to have the same missingness pattern.
+##  Please verify whether they are in fact logically distinct variables.
+##       [,1]         [,2]                
+##  [1,] &quot;RYM_Rating&quot; &quot;Num_of_RYM_Ratings&quot;
+##  [2,] &quot;Tracks&quot;     &quot;Colorscheme&quot;       
+##  [3,] &quot;avg_pop&quot;    &quot;max_pop&quot;           
+##  [4,] &quot;avg_pop&quot;    &quot;min_pop&quot;           
+##  [5,] &quot;avg_pop&quot;    &quot;med_pop&quot;           
+##  [6,] &quot;avg_pop&quot;    &quot;n&quot;                 
+##  [7,] &quot;max_pop&quot;    &quot;min_pop&quot;           
+##  [8,] &quot;max_pop&quot;    &quot;med_pop&quot;           
+##  [9,] &quot;max_pop&quot;    &quot;n&quot;                 
+## [10,] &quot;min_pop&quot;    &quot;med_pop&quot;           
+## [11,] &quot;min_pop&quot;    &quot;n&quot;                 
+## [12,] &quot;med_pop&quot;    &quot;n&quot;</code></pre>
+<pre><code>##  [1] id                 Metacritic_Score   Rank               Album_Name        
+##  [5] Singer             Release_Date       Desciption         Release_Year      
+##  [9] RYM_Rating         Genres             Language           Tracks            
+## [13] Colorscheme        RYM_Rank           Num_of_RYM_Ratings avg_pop           
+## [17] max_pop            min_pop            med_pop            n                 
+## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-6-1.png" width="960" /></p>
+<p>As we can see, there are only few values missing. This is due to the “search” nature of our collecting method. We get the matched results from some search engines; since it is rare for search engines to return an empty list, and we relax the matching criteria, values are rarely missing.</p>
+<p>Also, the missing patterns are very clear:</p>
+<ol style="list-style-type: decimal">
+<li>If we cannot find an album on Spotify, then the data on its tracks are all missing; this includes <code>avg_pop, max_pop, min_pop, med_pop, n</code>.
+<ul>
+<li>The missing albums on spotify are due to copyrights restrictions. For example, the band Belly removed their album “Dove” from Spotify. All of these albums can be searched on Spotify, but no tracks information are offered.</li>
+</ul></li>
+<li>If an album gets no ratings on RYM, its <code>RYM_Rating</code> and <code>Num_of_RYM_Ratings</code> are both missing.
+<ul>
+<li>There are two albums we found on RYM but with no <code>RYM_Rating</code> and <code>Num_of_RYM_Ratings</code>:
+<ul>
+<li>“Get Up Sequences, Pt. 1” by The Go! Team. On RYM, the title of this album is “Get Up Sequences Part One”, and the artist has another album called “Get Up Sequences Part Two” comming up. Since our algorithm doesn’t know “1” is “One”, it returned the wrong, unreleased album, which has no ratings.</li>
+<li>“MOSS” by Maya Hawke. This is an internal error of RYM: the page of “MOSS” <a href="https://rateyourmusic.com/release/album/maya-hawke/moss" class="uri">https://rateyourmusic.com/release/album/maya-hawke/moss</a> leads to a wrong page which has no rating</li>
+</ul></li>
+</ul></li>
+<li>If we cannot find an album on RYM, then the data offered by RYM is missing; this includes <code>RYM_Rating, Num_of_RYM_Ratings, Genres, Language, Tracks, Colorscheme, RYM_Rank</code>.
+<ul>
+<li>There is only one album we cannot find on RYM: “Pulse/Quartet” by Steve Reich.</li>
+</ul></li>
+</ol>
+<!-- TODO
+Missing values of spotify_tracks
+ -->
+<p>However, <strong>complete</strong> data doesn’t mean <strong>correct</strong> data.
+There is no such thing as a free lunch.
+The completeness of our data provided by the “search” nature of our data collecting method also raise the probability of returning a <strong>wrong</strong> data, when the data <em>should be missing</em>.</p>
+<p>For example, we use the first album returned by the Spotify search API as our observation. However, if the album doesn’t exist on Spotify, it may still return some related results. Then we collect the wrong data.
+Such senarios are more often when using RYM API.
+For example, “Halloween [Original 2018 Motion Picture Soundtrack]” by John Carpenter in the Metacritic chart is a 2018 soundtrack which is not included by RYM. However, this album has many older versions, so the RYM API returns an older version which is released in 1983.
+Some other examples includes that the album in the Metacritic chart is a new live version which is not included by RYM, so the RYM API returns the studio version.</p>
+<p><img src="assets/2022-12-14-15-19-10.png" /></p>
+<p>Also, we are exploring the “art” world; artists are full of creative ideas to name themself and their albums. Therefore, there are relatively more edge cases where we will get the wrongly-matched data.</p>
+<p>However, it is hard to consider all the edge cases and eliminate the wrong data. It is our next steps to reduce the error possibility.</p>
 
 </div>
 </div>
