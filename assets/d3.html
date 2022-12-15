@@ -1,4 +1,5 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -6,8 +7,14 @@
     <title>Review VS Popularity</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
+
 <body>
     <h1>Review VS Popularity</h1>
+    <p class="buttons">
+        <button type="button" id="popularity" value="popularity" class="button">Popularity</button>
+        <button type="button" id="danceability" value="danceability" class="button">Danceability</button>
+        <button type="button" id="energy" value="energy" class="button">Energy</button>
+    </p>
     <svg width="1000" height="3000"></svg>
     <script src="rvp.js"></script>
 </body>
@@ -17,15 +24,28 @@
     text {
         font-size: 12px;
     }
+
     .line {
         fill: none;
         stroke: cadetblue;
         stroke-width: 1.5px;
         opacity: 0.3;
     }
-    #head {
+
+    #head,
+    .button {
         font-weight: bold;
     }
+
+    .buttons {
+        position: absolute;
+        left: 500px;
+        top: 50px;
+        width: 400px;
+        display: flex;
+        justify-content: space-around;
+    }
+
     .info {
         visibility: hidden;
         position: absolute;
@@ -37,4 +57,5 @@
         font-size: 12px;
     }
 </style>
+
 </html>
