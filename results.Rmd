@@ -51,8 +51,7 @@ ggscatterhist(df, x = 'Release_Date', y = 'Metacritic_Score', color = "purple2",
 The three pattern also exist in the below plot for RYM ratings. However, the **variance** of user ratings are much larger than critic reviews. Why? The lowest rating in Metacritic is around 40 while in RYM, it is below 1. Considering that the critic ratings range from 0 to 100 and user ratings range from 0 to 5, 40 in 100 is a much tender rating compared to 1 in 5. We can also observe that the number of score is decline over time and also there are invisible lines between years.
 
 ```{r}
-ggscatterhist(df, x = 'Release_Date', y = 'RYM_Rating', color = "blue3", size = 0.1, alpha = 0.8,
-              margin.params = list(fill = "lightgray"), xlab = "Album Release Date", ylab = "Album Score on RYM", title = "Album Score on RYM")
+ggscatterhist(df, x = 'Release_Date', y = 'RYM_Rating', color = "blue3", size = 0.1, alpha = 0.8,margin.params = list(fill = "lightgray"), xlab = "Album Release Date", ylab = "Album Score on RYM", title = "Album Score on RYM")
 ```
 
 Next, we will analysis relationship between the number of users who rate the album and the album ratings through an **interactive scatter plot**. You can *hover* over the point and it will show you the name of the album you point at. You can also select a rectangle to see the partial data and dive deeper. 
@@ -83,7 +82,12 @@ fig
 
 In this part we will compare between metacritic ratings and RYM ratings.
 
+The following boxplot shows the distribution of Metacritic ratings and RYM ratings in each year. We have following findings:
 
+1. We can see that the Metacritic ratings is overall higher than the user ratings. Maybe it is because the score range is different or the user is tend to be more harsh. 
+2. The Metacritic ratings is slightly increased over the year while there is no same trend in RYM score plot.
+3. The variances of the Metacritic ratings are roughly the same in each year, while the variance of RYM ratings various a lot.
+4. There are more low ratings outliers in RYM data sets than Metacritic.
 ```{r}
 
 mt = ggplot(df, aes(Release_Date, Metacritic_Score)) + 
@@ -94,6 +98,7 @@ mt = ggplot(df, aes(Release_Date, Metacritic_Score)) +
 mt_d = ggplot(df, aes(x=factor(Release_Year),y=Metacritic_Score)) +
   geom_boxplot(fill = "purple2", alpha=0.3) +
   ggtitle("Album Score on Metacritic") +
+  ylim(0,100)+
   labs(y="Release Year", x="Album Score on Metacritic")
 
 rym = ggplot(df, aes(Release_Date, RYM_Rating)) + 
@@ -104,14 +109,15 @@ rym = ggplot(df, aes(Release_Date, RYM_Rating)) +
 
 rym_d = ggplot(df, aes(x=factor(Release_Year),y=RYM_Rating)) +
   geom_boxplot(fill = "blue3", alpha=0.3) +
+  ylim(0,5)+
   ggtitle("Album Score on RYM") +
   labs(y="Release Year", x="Album Score on RYM")
 
 multiplot(mt_d,rym_d,cols = 2)
 ```
+We show the top 15 rated singers/artists in Metacritic and RYM in the following graph. Unfortunately, no singer is in both the top 15 of Metacritic ratings and the top 15 of RYM ratings.T his shows how **different** the tastes of *professional music critics* are from those of the *public.*
 
 ```{r}
-
 rym_singer <- df %>%
   group_by(Singer) %>%
   summarise_at(vars(RYM_Rating), list(rym_score = mean))
@@ -131,7 +137,6 @@ mt_singer <- df %>%
   summarise_at(vars(Metacritic_Score), list(mt_score = mean))
 mt_singer <- mt_singer[order(-mt_singer$mt_score),][1:15,]
 
-
 mt_singer = mt_singer %>%
   ggplot(aes(x = mt_score, y = fct_reorder(Singer, mt_score))) +
   geom_point(color = "purple2") +
@@ -144,13 +149,21 @@ mt_singer = mt_singer %>%
 multiplot(mt_singer,rym_singer,cols = 2)
 ```
 
+Does a high Metscritic score indicate a high RYM rating? Roughly YES!
+
+The following scatter plot with smooth line shows the relationship between RYM Score and Metacritic score. The line has a positive slope with relative smally confidence interval(grey area around the line).
+
+However, the answer is not so sure in the case that one of the score is extreme low. We can see that in the high subregion, the points are very dense. But in the lower left corner of the graph, the distribution of points begins to scatter. This shows that if the Metacritic score is particularly low, we are no longer very confident in our answer. That is, a low score of Metacritic no longer indicates a low score of RYM. Vice versa.
+
 ```{r}
 ggplot(df, aes(Metacritic_Score, RYM_Rating)) + 
   geom_point(size = 0.03, alpha = 0.5) + 
   geom_smooth(colour = "coral") +
   labs(x = "Metacritic Score", y = "Rate Your Music Score") +
-  ggtitle("Metacritic vs Rate Your music")
+  ggtitle("Metacritic vs Rate Your Music")
 ```
+
+The following graph have 5 facets each of which contains scatter plot with smooth line in different year. Overall the patterns are same with the above graph. However, there are subtle different in the lower left corner and higher right corner between different year. For example, we have more confidence with our answer to the question "Does a high Metscritic score indicate a high RYM rating?" in year 2019 and 2021 for extremely low rating cases(lower left corner).
 
 ```{r}
 df$Fct_Release_Year = as.character(df$Release_Year)
