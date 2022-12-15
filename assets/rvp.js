@@ -1,17 +1,34 @@
 // const { d3 } = require("d3-node");
 d3.csv('https://raw.githubusercontent.com/edav-42/review-vs-stream/main/data/d3_data.csv').then(data => {
-	const width = 10000
-	const height = 300000
-	const scale = 4
+	const width = 10000;
+	const height = 300000;
+	const scale = 4;
 	const gdata = d3.group(data, d => d.Rank);
 	const garray = Array.from(gdata, ([, value]) => ({ value }));
-	const svg = d3.select('svg')
+	const svg = d3.select('svg');
 	const head = [
-		{ text: 'Rank', x: 0 },
-		{ text: 'Album', x: 50 },
-		{ text: 'Artist', x: 300 },
-		{ text: 'Popularity', x: 500 }
-	]
+		{ text: 'Rank', x: 0, y: 50 },
+		{ text: 'Album', x: 50, y: 50 },
+		{ text: 'Artist', x: 300, y: 50 },
+		// { text: 'Popularity', x: 500, y:20 }
+	];
+	
+	// Scale
+	const maxPop = 100; //d3.max(garray, v => d3.max(v.value, z => z.popularity));
+	const minPop = 0; //d3.min(garray, v => d3.min(v.value, z => z.popularity));
+	const popScale = d3.scaleLinear()
+					.domain([minPop, maxPop])
+					.range([500, 900]);
+	const colorScale = d3.scaleLinear()
+					.domain([minPop, maxPop])
+					.range([100, 255]);
+	
+	const axis = d3.axisTop(popScale)
+	svg.append("g")
+		.attr("class", "axis")
+		.attr("transform",
+			`translate(0, 50)`)
+		.call(axis);
 
 	// Fixed text
 	svg.append('g')
@@ -21,7 +38,7 @@ d3.csv('https://raw.githubusercontent.com/edav-42/review-vs-stream/main/data/d3_
 		.enter()
 		.append('text')
 		.attr('x', d => d.x)
-		.attr('y', '10')
+		.attr('y', d => d.y)
 		.text(d => d.text)
 
 	svg.append('g')
@@ -31,7 +48,7 @@ d3.csv('https://raw.githubusercontent.com/edav-42/review-vs-stream/main/data/d3_
 		.enter()
 		.append('text')
 		.attr('x', '0')
-		.attr('y', (d, i) => i * 22 + 50)
+		.attr('y', (d, i) => i * 22 + 80)
 		.attr('width', 20)
 		.text(d => d.value[0].Rank)
 	svg.append('g')
@@ -41,9 +58,9 @@ d3.csv('https://raw.githubusercontent.com/edav-42/review-vs-stream/main/data/d3_
 		.enter()
 		.append('text')
 		.attr('x', '50')
-		.attr('y', (d, i) => i * 22 + 50)
+		.attr('y', (d, i) => i * 22 + 80)
 		.attr('width', 20)
-		.text(d => d.value[0].Album_Name)
+		.text(d => d.value[0]['Album_Name'])
 	svg.append('g')
 		.attr('id', 'artist')
 		.selectAll('text')
@@ -51,7 +68,7 @@ d3.csv('https://raw.githubusercontent.com/edav-42/review-vs-stream/main/data/d3_
 		.enter()
 		.append('text')
 		.attr('x', '300')
-		.attr('y', (d, i) => i * 22 + 50)
+		.attr('y', (d, i) => i * 22 + 80)
 		.attr('width', 20)
 		.text(d => d.value[0].Singer)
 
@@ -74,12 +91,13 @@ d3.csv('https://raw.githubusercontent.com/edav-42/review-vs-stream/main/data/d3_
 		.data(garray)
 		.enter()
 			.append('circle')
-			.attr('cx', d => 500 + +d3.mean(d.value, v => v.popularity) * scale)
-			.attr('cy', (d, i) => i * 22 + 45)
+			.attr('cx', d => popScale(d3.mean(d.value, v => v.popularity)))
+			.attr('cy', (d, i) => i * 22 + 75)
 			.attr('r', '8')
 			.attr('fill', '#007aff')
 	
 	const mean_circ = d3.select('#mean').selectAll('circle')
+	let track = d3.selectAll('.track')
 	mean_circ.on('click', function() {
 		const cy = d3.select(this).attr('cy');
 		const cx = d3.select(this).attr('cx');
@@ -90,21 +108,23 @@ d3.csv('https://raw.githubusercontent.com/edav-42/review-vs-stream/main/data/d3_
 		
 		d3.select(this)
 			.transition()
-			.duration(100)
-			.attr('r', '0');
+			.duration(200)
+			.attr('r', '0')
+			.attr('fill', d => `rgb(0,122,${colorScale(d3.mean(d.value, v => v.popularity))})`);
 		
 		const g = svg.append('g')
 		g.selectAll('circle')
 			.data(tracks)
 			.enter()
 				.append('circle')
+				.attr('class', 'track')
 				.attr('cx', cx)
 				.attr('cy', cy)
 				.attr('r', '5')
-				.attr('fill', '#007aff99')
+				.attr('fill', d => `rgba(0, 122, ${colorScale(d.popularity)}, 0.7)`)
 				.transition()
-				.duration(100)
-				.attr('r','5')
+				.duration(200)
+				.attr('r','6')
 				.transition()
 				.duration(500)
 				.attr('cx', d => 500 + +d.popularity * scale);
@@ -112,16 +132,30 @@ d3.csv('https://raw.githubusercontent.com/edav-42/review-vs-stream/main/data/d3_
 		const mylinegen = d3.line()
 			.x(d => d[0])
 			.y(d => d[1]);
-		console.log(cx + width);
 		g.append('path')
 			.datum(line)
 			.transition()
-			.duration(100)
+			.duration(200)
 			.attr('d', mylinegen([[+cx, +cy], [+cx, +cy]]))
 			.attr('class', 'line')
 			.transition()
 			.duration(500)
 			.attr('d', mylinegen)
-
+		
+		track = d3.selectAll('.track');
+		track.on('mouseover', function(event, d) {
+			const [x,y] = d3.pointer(event);
+			info.html(d.name)
+				.transition()
+				.duration(50)
+				.style('visibility', 'visible')
+				.style('left', (x + 10) + "px")
+				.style('top', (y + 40) + "px");
+		track.on('mouseout', function() {
+			info.style('visibility', 'hidden');
+		})
+		})
 	})
+
+	const info = d3.select('.info')
 })
