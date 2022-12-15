@@ -4,6 +4,9 @@ output: html_document
 
 # Results
 
+In the part of data exploratory analysis, we will first introduce the respective data of Metacritic Ratings and Rate Your Music Ratings in turn, then compare and analyze ratings from Metacritic and RYM. Next we will introduce Spotify Popularity and Tracks Variables, and finally we will cross-analyze data from these three data source.
+
+**Note**: For reading convenience, the following plots whose feature are filled in purple denotes that the main data is from Metacritic, blue for RYM and green for Spotify. Orange represents cross-analysis. :)
 
 ```{r, echo=FALSE}
 library(ggplot2)
@@ -29,6 +32,14 @@ sptf_tk = read.csv("data/spotify_tracks.csv")
 
 ## Metacritic
 
+What's the distribution of critic ratings of Albums that were released between 2018 and 2022 on Metacritic look like? How does it change over time? The following graph tells us the answer.
+
+First, from the marginal density graph in the right part of the graph, we can tell that the  distribution of critic ratings is a little bit **left skewed**. Most albums' ratings are within the range [70,90]. There are, however, a few albums with really low ratings. For example, one album's rating on Metacritic doesn't even reach 40 out of 100.
+
+Second, the top density curve of the graph tells us how the number of ratings of albums on Metacritic changes over time. We can see that the number of ratings is **steadily decrease** over time. Since every album only has one score on Metacritic, it could be that the phenomenon that the number of albums released is decreased over time leads to the decline.
+
+Lastly, the purple dot in the graph shows the album ratings on Metacritic and corresponding release time. At first glance, there is no obvious pattern or trend in it: points are roughly evenly distributed, and there is no sudden change along the release date. However, there is a small interesting finding: it seems that there exists **invisible line** that separate the points between different year. It is weird at first because we didn't make any restriction on the date. However, after second thought, it is quite reasonable, artists also celebrate Christmas and New Year! So at the end of each year, there are basically no new albums released.
+
 ```{r}
 ggscatterhist(df, x = 'Release_Date', y = 'Metacritic_Score', color = "purple2",size = 0.1, alpha = 0.8,
               margin.params = list(fill = "lightgray"), xlab = "Album Release Date", ylab = "Album Score on Metacritic", title = "Album Score on Metacritic")
@@ -37,10 +48,41 @@ ggscatterhist(df, x = 'Release_Date', y = 'Metacritic_Score', color = "purple2",
 
 ## RYM
 
+The three pattern also exist in the below plot for RYM ratings. However, the **variance** of user ratings are much larger than critic reviews. Why? The lowest rating in Metacritic is around 40 while in RYM, it is below 1. Considering that the critic ratings range from 0 to 100 and user ratings range from 0 to 5, 40 in 100 is a much tender rating compared to 1 in 5. We can also observe that the number of score is decline over time and also there are invisible lines between years.
+
 ```{r}
 ggscatterhist(df, x = 'Release_Date', y = 'RYM_Rating', color = "blue3", size = 0.1, alpha = 0.8,
               margin.params = list(fill = "lightgray"), xlab = "Album Release Date", ylab = "Album Score on RYM", title = "Album Score on RYM")
 ```
+
+Next, we will analysis relationship between the number of users who rate the album and the album ratings through an **interactive scatter plot**. You can *hover* over the point and it will show you the name of the album you point at. You can also select a rectangle to see the partial data and dive deeper. 
+
+The point are colored according to the Metacritic score, the deeper of the color means the higher the score is. Along the y-axis, we can see that roughly the color of the points turns deeper, which means overall the RYM ratings and Metacritic Score have positive relationships.(We will discuss the relationship later)
+
+Regarding the relationship between the number of users who rate the album and the album ratings, we have following findings:
+- There is no albums with *high votes and low ratings*. It is reasonable because people have more incentive to rate an album if they think it is great, otherwise they will just omit it. There is an exception on the album **"Jesus Is King"** by Kanye West with 27k votes and 2.38 rating. Maybe we should all listen to this album thouroughly to find out why:)
+
+- For albums with more than a few votes, the average rating increases with the number of votes.
+- No albums in the area where represents high votes and max ratings
+- There are points who are lower than expected ratings and should be seen as **outliers.** (e.g. "Jesus Is King")
+- Albums with low votes have relatively full range over y-axis.
+
+```{r}
+fig <- plot_ly(df, x = ~Num_of_RYM_Ratings, y = ~RYM_Rating, text = ~ Album_Name, color = ~Metacritic_Score, type = 'scatter', mode = 'markers', colors = 'YlOrBr',
+        sizes = c(10, 50),
+        marker = list(opacity = 0.9, sizemode = 'diameter'))
+fig <- fig %>% layout(title = 'Album Score on RYM',
+         xaxis = list(showgrid = FALSE),
+         yaxis = list(showgrid = FALSE),
+         showlegend = TRUE)
+
+fig
+```
+
+## Metacritic VS RYM
+
+In this part we will compare between metacritic ratings and RYM ratings.
+
 
 ```{r}
 
@@ -67,21 +109,6 @@ rym_d = ggplot(df, aes(x=factor(Release_Year),y=RYM_Rating)) +
 
 multiplot(mt_d,rym_d,cols = 2)
 ```
-
-
-```{r}
-fig <- plot_ly(df, x = ~Num_of_RYM_Ratings, y = ~RYM_Rating, text = ~ Album_Name, color = ~Metacritic_Score, type = 'scatter', mode = 'markers', colors = 'YlOrBr',
-        sizes = c(10, 50),
-        marker = list(opacity = 0.9, sizemode = 'diameter'))
-fig <- fig %>% layout(title = 'Album Score on RYM',
-         xaxis = list(showgrid = FALSE),
-         yaxis = list(showgrid = FALSE),
-         showlegend = TRUE)
-
-fig
-```
-
-## Metacritic VS RYM
 
 ```{r}
 
