@@ -15,10 +15,10 @@ With this intractive gragh, users can easily figure out the review rank, average
 
 We also provide two other aspects: danceability and energy. After clicking on the buttons on the top, the graph will transition to present another aspect.
 
-<iframe width="1000" height="1000" src="assets/4interactive.html"></iframe>
+<iframe width="1250" height="3500" src="assets/4interactive.html"></iframe>
 <style>
 iframe {border: none;}
 .book .book-body .page-wrapper .page-inner {
-  max-width: 1000px !important;
+  max-width: 1250px !important;
 }
 </style>
