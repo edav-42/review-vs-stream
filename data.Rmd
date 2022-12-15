@@ -36,7 +36,7 @@ As we can see from below, the raw data we scrapped from the [Metacritic](https:/
 Thus, before analyzing, we did data cleaning to the Metacritic data set:
 
 1. Delete useless columns: V6, V8, V9 are useless because of either containing duplicate data or having long text that is not helpful.
-2. Rename left columns: according to the meaning of each row, we rename the columns as "Metacritic_Score", "Rank", "Album_Name", "Singer", "Release_Date", "Description", "User_Score", "Release_Year"
+2. Rename left columns: according to the meaning of each row, we rename the columns as `Metacritic_Score`, `Rank`, `Album_Name`, `Singer`, `Release_Date`, `Description`, `User_Score`, `Release_Year`
 3. Transform the data
   - Metacritic_Score & Rank: transform them from type char to type int for future analysis.
   - Singer: contains redundant characters "by ", e.g. "by Fiona Apple". Extract only the artist name, e.g. "Fiona Apple"
@@ -75,7 +75,7 @@ As we can see from the snapshot of the description of sample album of the raw da
 Before conducting merging, data need cleaning and transformation.
 
 1. Delete useless columns: Type, Recorded are useless because they contain duplicate data.
-2. New column: We found that "RYM Rating" is in charcter type and contains not only ratings but also number of people who rate the album. Therefore, we extract the number of ratings and create a new column named "Num_of_RYM_Ratings"
+2. New column: We found that `RYM Rating` is in charcter type and contains not only ratings but also number of people who rate the album. Therefore, we extract the number of ratings and create a new column named `Num_of_RYM_Ratings`
 3. Transform the data
   - Released: it is originally in char type, e.g. "14 September 2018". Transform it to R datetime type, e.g. 2018-09-14
   - RYM Rating: Extract ratings from characters and change the data type to numerate.
@@ -142,7 +142,7 @@ The data set for tracks contains 26834 observations of 16 different variables.
 
 ### Final Data Set
 
-After cleaning data set from each website/API, we concatenate 3 album-level data set by "id", which was generated during the query to API and was based on combination of album name and artist name.
+After cleaning data set from each website/API, we concatenate 3 album-level data set by `id`, which was generated during the query to API and was based on combination of album name and artist name.
 
 The final album data set has 2275 observations of 20 variables.(For duplicate columns, we only conserve 1 column in the final data set)
 
