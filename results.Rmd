@@ -124,8 +124,8 @@ The following ridgelines shows the distribution of Metacritic ratings and RYM ra
 2. The Metacritic ratings is slightly increased over the year while there is no same trend in RYM score plot.
 3. The variances of the Metacritic ratings are roughly the same in each year, while the variance of RYM ratings various a lot.
 4. There are more low ratings outliers in RYM data sets than Metacritic.
-```{r}
 
+```{r}
 mt <- ggplot(df, aes(Release_Date, Metacritic_Score)) +
   geom_point(size = 0.02, alpha = 0.5) +
   labs(x = "Album Release Date", y = "Album Score on Metacritic") +
@@ -170,12 +170,12 @@ rym_r <- ggplot(df, aes(x = RYM_Rating, y = factor(Release_Year))) +
   ggtitle("Album Score on RYM") +
   labs(y = "Release Year", x = "Album Score on RYM")
 
-multiplot(mt_r, rym_r, rows = 2)
+multiplot(mt_r, rym_r, cols = 1)
 ```
 
 \line
 
-We show the top 15 rated singers/artists in Metacritic and RYM in the following graph. Unfortunately, no singer is in both the top 15 of Metacritic ratings and the top 15 of RYM ratings.T his shows how **different** the tastes of *professional music critics* are from those of the *public.*
+We show the top 15 rated singers/artists in Metacritic and RYM in the following graph. Unfortunately, no singer is in both the top 15 of Metacritic ratings and the top 15 of RYM ratings. This shows how **different** the tastes of *professional music critics* are from those of the *public.*
 
 ```{r}
 rym_singer <- df %>%
@@ -335,7 +335,7 @@ Do albums with high ratings also have high popularity?
 To answer this question, we drew scatter plots of Spotify popularity and metacritic rating as well as scatter plots of Spotify popularity and Rate Your Music rating. We can see that the distribution of these two plots is about the same. 
 
 - Firstly, most of the points are concentrated in the medium rating position. 
-- Second, the ratings of albums with low Spotify popularity are usually at an average level, and then the range of ratings of albums with high Spotify popularity is very large. 
+- Second, the ratings of albums with low Spotify popularity are usually at an average level, and then the range of ratings of albums with high Spotify popularity is very large. This means the popular albums can be lowly rated or highly rated; we cannot say that an popular album must be good or bad.
 - In addition, the curve fitted by geom_smooth tells us that albums with extreme low or extreme high ratings are usually more popular. This sounds quite reasonable. Because, high quality albums with high ratings are popular with the masses, while albums with low ratings, which we usually call catchy songs, are also very popular on the web. After all, in this day and age, the attributes of society are entertaining.
 
 ```{r}
