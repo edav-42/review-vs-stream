@@ -308,6 +308,7 @@ ggplot(df, aes(RYM_Rating, max_pop,colour = Fct_Release_Year)) +
 
 In order to better analyze the relationship between popularity and rating, and considering that these are all continuous variables, we plotted the Parallel coordinate plot and properly changed the order of the variables for better observation.
 
+Overall, the relationship between the five variables looks like a capital **M**, which means that the majority of albums fall within a range where high ratings and low popularity are associated overall. This corresponds to the graph we just presented, where the center of the graph is in the lower right corner. Of course, there are some exceptions in the Parallel coordinate plot, such as the **inverted M**. These are albums with low ratings but very high popularity.
 
 ```{r}
 
@@ -317,6 +318,11 @@ ggparcoord(df, columns = c(17,2,18,9,19), alpha=0.05,
 
 ```
 
+Below is the Parallel coordinate plot by year, and we can see that in addition to showing the overall trend, the exceptions, i.e., the inverted M shape, become more and more pronounced as the year increases.
+
+We can see that in 2018, the number of inverted M shapes lines is small and they do not stand out, meaning that the minimum popularity is not high. However, in 2022, there are more albums that have this very low rating, yet are extremely popular, both in terms of minimum, maximum and median popularity.
+
+Perhaps this is related to the gradual popularity of short videos and their viral spread of catchphrases. In any case, it seems to show that our time is being occupied by entertainment little by little.
 
 ```{r}
 ggparcoord(df, columns = c(17,2,18,9,19), alpha=0.1,groupColumn= "Fct_Release_Year",
