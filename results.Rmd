@@ -240,7 +240,6 @@ For further analysis, we plotted the scatter plot of popularity vs. instrumental
 The plot on the left shows popularity vs. instrumentalness. We can see that the points are mostly concentrated at the ends of the x-axis, and there is a tendency for the popularity to decrease as the instrumentalness rises. In addition, we also find that almost all points with high popularity are concentrated in the region where the instrumentalness is particularly small (upper left corner).
 
 
-The graph on the right shows popularity vs. danceability. We can clearly see the trend of increasing popularity as danceability increases. Also, for a given danceability, the upper bound of the popularity increases with the increase of danceability.
 ```{r}
 
 inst = ggplot(sptf_tk, aes(instrumentalness, popularity)) + 
@@ -262,21 +261,32 @@ multiplot(inst,dance ,cols = 2)
 
 ## Spotify VS Metacritic VS RYM
 
+Do albums with high ratings also have high popularity? 
+
+To answer this question, we drew scatter plots of Spotify popularity and metacritic rating as well as scatter plots of Spotify popularity and Rate Your Music rating. We can see that the distribution of these two plots is about the same. 
+
+- Firstly, most of the points are concentrated in the medium rating position. 
+- Second, the ratings of albums with low Spotify popularity are usually at an average level, and then the range of ratings of albums with high Spotify popularity is very large. 
+- In addition, the curve fitted by geom_smooth tells us that albums with extreme low or extreme high ratings are usually more popular. This sounds quite reasonable. Because, high quality albums with high ratings are popular with the masses, while albums with low ratings, which we usually call catchy songs, are also very popular on the web. After all, in this day and age, the attributes of society are entertaining.
+
 ```{r}
 spt_rym = ggplot(df, aes(RYM_Rating, max_pop)) + 
   geom_point(size = 0.03, alpha = 0.5,colour = "blue3") + 
-  labs(x = "Album Score on RYM", y = "Spotify_Popularity(max in an album)") +
+  labs(x = "Album Score on RYM", y = "Spotify Popularity(max in an album)") +
   geom_smooth(colour = "blue3") +
-  ggtitle("Spotify Popularity VS RYM Rating")
+  ggtitle("Spotify Popularity \nVS\n RYM Rating")
 
 spt_meta = ggplot(df, aes(Metacritic_Score, max_pop)) + 
   geom_point(size = 0.03, alpha = 0.5, colour = "purple2") + 
-  labs(x = "Album Score on Metacritic", y = "Spotify_Popularity(max in an album)") +
+  labs(x = "Album Score on Metacritic", y = "Spotify Popularity(max in an album)") +
   geom_smooth(colour = "purple2") +
-  ggtitle("Spotify Popularity VS Metacritic Rating")
+  ggtitle("Spotify Popularity \nVS\n Metacritic Rating")
 
 multiplot(spt_meta,spt_rym,cols = 2)
 ```
+
+The following two graphs show the relationship between Spotify popularity and metacritic rating as well as the relationship between Spotify popularity and Rate Your Music rating in different years. Although in general, the trends and distribution of these graphs are similar to the ones we just mentioned, in some years, there are some edge cases that lead to subtle changes in the situation. For example, in the second graph below, which shows Spotify popularity and Rate Your Music rating, in 2021, albums with higher ratings no longer enjoy higher popularity, which is a curious phenomenon. A closer look reveals that there is an outlier that causes the fitted curve to shift downward.
+
 ```{r}
 ggplot(df, aes(Metacritic_Score, max_pop,colour = Fct_Release_Year)) + 
   geom_point(size = 0.03, alpha = 0.5) + 
@@ -296,7 +306,7 @@ ggplot(df, aes(RYM_Rating, max_pop,colour = Fct_Release_Year)) +
 ```
 
 
-
+In order to better analyze the relationship between popularity and rating, and considering that these are all continuous variables, we plotted the Parallel coordinate plot and properly changed the order of the variables for better observation.
 
 
 ```{r}
