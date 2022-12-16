@@ -178,11 +178,15 @@ ggplot(df, aes(Metacritic_Score, RYM_Rating, colour = Fct_Release_Year)) +
 
 ## Spotify
 
+The below scatter plot with marginal density plot shows how Spotify popularity of album distributed and how it changed over time. Different to ratings, the distribution of popularity is a bit right skewed rather than left skewed, which tells us that most album have relatively low popularity. It is worth noting that the popularity here means the maximum popularity of songs in a album. We will discuss the commons and difference of the distribution between maximum popularity, minimum popularity, average popularity and median popularity later.
 ```{r}
 ggscatterhist(df, x = 'Release_Date', y = 'max_pop', color = "darkgreen",size = 0.1, alpha = 0.8,
               margin.params = list(fill = "lightgray"), xlab = "Album Release Date", ylab = "Spotify Popularity(max in an album)", title = "Spotify Popularity")
 
 ```
+
+
+The graph below shows the distribution of the box plot of min, max, average and median popularity in different years. We can see that the growth trend and distribution changes are similar for these four graphs. We also find that the popularity **increases** with the year. This makes sense because the popularity provided by Spotify is the station's song popularity at a certain date, and people usually play albums just released more frequently rather than those released years ago.
 
 ```{r}
 
@@ -206,15 +210,20 @@ med = ggplot(df, aes(x=factor(Release_Year),y=med_pop)) +
 multiplot(max,avg,min,med ,cols = 2)
 ```
 
+Next, we draw a parallel coordinate plot on different representative methods of an album(avg, max, min and median). The major trend is that all these four variables are positive related. We can conclude this by the nearly horizontal lines between them. However, there do exist exception, we can also find some lines, who has extreme low average popularity, high maximum popularity, low minimum popularity and high median popularity. This means that, there ia a small fraction of albums, in which the variance of popularity of different tracks/songs can be very large.
 ```{r}
 ggparcoord(df, columns = c(16, 17,18,19), alpha=0.08,
-           title = "Parallel coordinate plot for Album Popularity()",
+           title = "Parallel coordinate plot for Album Popularity",
            scale = "uniminmax")
 ```
-！！这里有一个隐秘的trend，就是有一些maxpop和medpop很高，但是min——pop极低的专辑，这说明有些专辑内部pop方差很大（虽然大部分不是这样）。
-
 
 ### Spotify Track
+
+The analysis so far has been at the album level; in this subsection, we will focus on the song level.
+
+Have you ever wonder what are the factors that contribute to the popularity of a song? The common practice is to pick two variables that you think are correlated and graph or analyze them. However with Spotify's dataset of over 15 variables, a two-by-two analysis would take a lot of time and effort and be extremely inefficient.
+
+To explore this, we plotted a heat map of the correlations between the variables in the Spotify track dataset. Color blue represents positive correlations and red represents negative correlations. Finding the rows and columns correlated with popularity, we can find that popularity is very positively correlated with the danceability of the song and negatively correlated with the instrumentalness of the song. Is this really the case?
 
 ```{r}
 
@@ -226,7 +235,12 @@ ggcorrplot(corr, p.mat = cor_pmat(my_data),
            color = c("#FC4E07", "white", "#00AFBB"),
            outline.col = "white", lab = TRUE)
 ```
+For further analysis, we plotted the scatter plot of popularity vs. instrumentalness and the scatter plot of popularity vs. danceability.
 
+The plot on the left shows popularity vs. instrumentalness. We can see that the points are mostly concentrated at the ends of the x-axis, and there is a tendency for the popularity to decrease as the instrumentalness rises. In addition, we also find that almost all points with high popularity are concentrated in the region where the instrumentalness is particularly small (upper left corner).
+
+
+The graph on the right shows popularity vs. danceability. We can clearly see the trend of increasing popularity as danceability increases. Also, for a given danceability, the upper bound of the popularity increases with the increase of danceability.
 ```{r}
 
 inst = ggplot(sptf_tk, aes(instrumentalness, popularity)) + 
@@ -300,10 +314,6 @@ ggparcoord(df, columns = c(17,2,18,9,19), alpha=0.1,groupColumn= "Fct_Release_Ye
            scale = "uniminmax") + 
   theme(axis.text.x = element_text(face="bold", size=5, angle=18)) +
   facet_wrap(~Fct_Release_Year)
-```
-
-```{r}
-colnames(df)
 ```
 
 
