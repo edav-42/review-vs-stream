@@ -188,7 +188,7 @@ Remember that we also have a track-level data set from Spotify. We will have exp
 
 ## Missing value analysis
 
-We first analyze the joint album-level data.
+We first analyze the missing value patterns of the joint album-level data.
 
 ```{r}
 data <- read.csv('data/data.csv')

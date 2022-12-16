@@ -1,2 +1,13 @@
 # Conclusion
 
+## Limitations and Future Directions
+
+- Although our collected dataset is large and covers three different sources, there are still many more aspects of an album regarding review and stream we can consider:
+    - Real and converted streams. Spotify only gives us a variable called `popularity` which is returned by a closed source algorithm. To better capture the popularity of an album, we can find real stream data. For example, data provided by [ChartMasters](https://chartmasters.org) and [Billboard](https://www.billboard.com).
+    - More platforms. This project only considers one streaming platform; in the future, we can collect data from more streaming platforms like Apple Music and YouTube. However, the reason we haven't consider these platforms yet is that they lack usable APIs.
+    - Specific critics. Metacritic aggregates the reviews from some critics. However, it doesn't cover some famous critics like [Pitchfork](https://pitchfork.com). Therefore, we can look into the data from some specific critics. This can also review the taste, appreciation, and influence of the critics.
+
+## Lessons Learned
+
+
+
