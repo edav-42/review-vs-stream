@@ -7,4 +7,16 @@ site: bookdown::bookdown_site
 
 # Introduction
 
-> Explain why you chose this topic, and the questions you are interested in studying. Provide context for readers who are not familiar with the topic.
+We are avid music lovers. We listen to both critically acclaimed music and trendy pop songs. In daily life, we found some albums have great reviews but few people have heard of them; while some hot TikTok songs are spurned by most people. Of course, a lot of good music is both popular and highly rated.
+
+Therefore, we want to explore the relationship between the review and stream. Meanwhile, we also want to give some answers to these two questions:
+
+- What makes an album highly/lowly rated?
+- What makes an album popular/unpopular?
+
+Bearing these questions in mind, we explore and visualize the data from Metacritic (for critic reviews), Rate Your Music (for user ratings), and Spotify (for popularity).
+
+We are aware that there are many existent projects focusing on analyzing music-related data; for example, some projects purely explore and present the Spotify data.
+However, our project focuses on three different sources, and we mainly use the popularity information provided by Spotify. Additionally, we emphasize on the relationship between different sources and different aspects of the music.
+
+Now please join us on this wild music EDAV journey!
