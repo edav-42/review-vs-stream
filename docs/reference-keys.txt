@@ -23,4 +23,3 @@ spotify-track
 spotify-vs-metacritic-vs-rym
 interactive-component
 conclusion
-data-collecting
