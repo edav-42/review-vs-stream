@@ -7,6 +7,7 @@ user-ratings
 streams
 data
 sources
+data-collecting
 cleaning-transformation
 metacritic-data
 rate-your-music
@@ -15,7 +16,7 @@ final-data-set
 missing-value-analysis
 results
 metacritic
-rym
+rate-your-music-1
 metacritic-vs-rym
 spotify-1
 spotify-track

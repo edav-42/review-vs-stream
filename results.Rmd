@@ -46,7 +46,7 @@ ggscatterhist(df, x = 'Release_Date', y = 'Metacritic_Score', color = "purple2",
 ```
 
 
-## RYM
+## Rate Your Music
 
 The three pattern also exist in the below plot for RYM ratings. However, the **variance** of user ratings are much larger than critic reviews. Why? The lowest rating in Metacritic is around 40 while in RYM, it is below 1. Considering that the critic ratings range from 0 to 100 and user ratings range from 0 to 5, 40 in 100 is a much tender rating compared to 1 in 5. We can also observe that the number of score is decline over time and also there are invisible lines between years.
 
@@ -115,6 +115,9 @@ rym_d = ggplot(df, aes(x=factor(Release_Year),y=RYM_Rating)) +
 
 multiplot(mt_d,rym_d,cols = 2)
 ```
+
+\line
+
 We show the top 15 rated singers/artists in Metacritic and RYM in the following graph. Unfortunately, no singer is in both the top 15 of Metacritic ratings and the top 15 of RYM ratings.T his shows how **different** the tastes of *professional music critics* are from those of the *public.*
 
 ```{r}
@@ -179,6 +182,8 @@ ggplot(df, aes(Metacritic_Score, RYM_Rating, colour = Fct_Release_Year)) +
 ## Spotify
 
 The below scatter plot with marginal density plot shows how Spotify popularity of album distributed and how it changed over time. Different to ratings, the distribution of popularity is a bit right skewed rather than left skewed, which tells us that most album have relatively low popularity. It is worth noting that the popularity here means the maximum popularity of songs in a album. We will discuss the commons and difference of the distribution between maximum popularity, minimum popularity, average popularity and median popularity later.
+
+
 ```{r}
 ggscatterhist(df, x = 'Release_Date', y = 'max_pop', color = "darkgreen",size = 0.1, alpha = 0.8,
               margin.params = list(fill = "lightgray"), xlab = "Album Release Date", ylab = "Spotify Popularity(max in an album)", title = "Spotify Popularity")
@@ -235,6 +240,8 @@ ggcorrplot(corr, p.mat = cor_pmat(my_data),
            color = c("#FC4E07", "white", "#00AFBB"),
            outline.col = "white", lab = TRUE)
 ```
+\line
+
 For further analysis, we plotted the scatter plot of popularity vs. instrumentalness and the scatter plot of popularity vs. danceability.
 
 The plot on the left shows popularity vs. instrumentalness. We can see that the points are mostly concentrated at the ends of the x-axis, and there is a tendency for the popularity to decrease as the instrumentalness rises. In addition, we also find that almost all points with high popularity are concentrated in the region where the instrumentalness is particularly small (upper left corner).
