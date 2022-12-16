@@ -145,12 +145,12 @@
 <p>First, from the marginal density graph in the right part of the graph, we can tell that the distribution of critic ratings is a little bit <strong>left skewed</strong>. Most albums’ ratings are within the range [70,90]. There are, however, a few albums with really low ratings. For example, one album’s rating on Metacritic doesn’t even reach 40 out of 100.</p>
 <p>Second, the top density curve of the graph tells us how the number of ratings of albums on Metacritic changes over time. We can see that the number of ratings is <strong>steadily decrease</strong> over time. Since every album only has one score on Metacritic, it could be that the phenomenon that the number of albums released is decreased over time leads to the decline.</p>
 <p>Lastly, the purple dot in the graph shows the album ratings on Metacritic and corresponding release time. At first glance, there is no obvious pattern or trend in it: points are roughly evenly distributed, and there is no sudden change along the release date. However, there is a small interesting finding: it seems that there exists <strong>invisible line</strong> that separate the points between different year. It is weird at first because we didn’t make any restriction on the date. However, after second thought, it is quite reasonable, artists also celebrate Christmas and New Year! So at the end of each year, there are basically no new albums released.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 </div>
 <div id="rate-your-music-1" class="section level2 hasAnchor" number="4.2">
 <h2><span class="header-section-number">4.2</span> Rate Your Music<a href="results.html#rate-your-music-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The three pattern also exist in the below plot for RYM ratings. However, the <strong>variance</strong> of user ratings are much larger than critic reviews. Why? The lowest rating in Metacritic is around 40 while in RYM, it is below 1. Considering that the critic ratings range from 0 to 100 and user ratings range from 0 to 5, 40 in 100 is a much tender rating compared to 1 in 5. We can also observe that the number of score is decline over time and also there are invisible lines between years.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>Next, we will analysis relationship between the number of users who rate the album and the album ratings through an <strong>interactive scatter plot</strong>. You can <em>hover</em> over the point and it will show you the name of the album you point at. You can also select a rectangle to see the partial data and dive deeper.</p>
 <p>The point are colored according to the Metacritic score, the deeper of the color means the higher the score is. Along the y-axis, we can see that roughly the color of the points turns deeper, which means overall the RYM ratings and Metacritic Score have positive relationships.(We will discuss the relationship later)</p>
 <p>Regarding the relationship between the number of users who rate the album and the album ratings, we have following findings:
@@ -174,35 +174,35 @@
 <li>The Metacritic ratings is slightly increased over the year while there is no same trend in RYM score plot.</li>
 <li>The variances of the Metacritic ratings are roughly the same in each year, while the variance of RYM ratings various a lot.</li>
 <li>There are more low ratings outliers in RYM data sets than Metacritic.
-<img src="finalproj_files/figure-html/unnamed-chunk-7-1.png" width="672" /></li>
+<img src="finalproj_files/figure-html/unnamed-chunk-13-1.png" width="672" /></li>
 </ol>
 <p>We show the top 15 rated singers/artists in Metacritic and RYM in the following graph. Unfortunately, no singer is in both the top 15 of Metacritic ratings and the top 15 of RYM ratings.T his shows how <strong>different</strong> the tastes of <em>professional music critics</em> are from those of the <em>public.</em></p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>Does a high Metscritic score indicate a high RYM rating? Roughly YES!</p>
 <p>The following scatter plot with smooth line shows the relationship between RYM Score and Metacritic score. The line has a positive slope with relative smally confidence interval(grey area around the line).</p>
 <p>However, the answer is not so sure in the case that one of the score is extreme low. We can see that in the high subregion, the points are very dense. But in the lower left corner of the graph, the distribution of points begins to scatter. This shows that if the Metacritic score is particularly low, we are no longer very confident in our answer. That is, a low score of Metacritic no longer indicates a low score of RYM. Vice versa.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>The following graph have 5 facets each of which contains scatter plot with smooth line in different year. Overall the patterns are same with the above graph. However, there are subtle different in the lower left corner and higher right corner between different year. For example, we have more confidence with our answer to the question “Does a high Metscritic score indicate a high RYM rating?” in year 2019 and 2021 for extremely low rating cases(lower left corner).</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 </div>
 <div id="spotify-1" class="section level2 hasAnchor" number="4.4">
 <h2><span class="header-section-number">4.4</span> Spotify<a href="results.html#spotify-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The below scatter plot with marginal density plot shows how Spotify popularity of album distributed and how it changed over time. Different to ratings, the distribution of popularity is a bit right skewed rather than left skewed, which tells us that most album have relatively low popularity. It is worth noting that the popularity here means the maximum popularity of songs in a album. We will discuss the commons and difference of the distribution between maximum popularity, minimum popularity, average popularity and median popularity later.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <p>The graph below shows the distribution of the box plot of min, max, average and median popularity in different years. We can see that the growth trend and distribution changes are similar for these four graphs. We also find that the popularity <strong>increases</strong> with the year. This makes sense because the popularity provided by Spotify is the station’s song popularity at a certain date, and people usually play albums just released more frequently rather than those released years ago.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>Next, we draw a parallel coordinate plot on different representative methods of an album(avg, max, min and median). The major trend is that all these four variables are positive related. We can conclude this by the nearly horizontal lines between them. However, there do exist exception, we can also find some lines, who has extreme low average popularity, high maximum popularity, low minimum popularity and high median popularity. This means that, there ia a small fraction of albums, in which the variance of popularity of different tracks/songs can be very large.
-<img src="finalproj_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<img src="finalproj_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <div id="spotify-track" class="section level3 hasAnchor" number="4.4.1">
 <h3><span class="header-section-number">4.4.1</span> Spotify Track<a href="results.html#spotify-track" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The analysis so far has been at the album level; in this subsection, we will focus on the song level.</p>
 <p>Have you ever wonder what are the factors that contribute to the popularity of a song? The common practice is to pick two variables that you think are correlated and graph or analyze them. However with Spotify’s dataset of over 15 variables, a two-by-two analysis would take a lot of time and effort and be extremely inefficient.</p>
 <p>To explore this, we plotted a heat map of the correlations between the variables in the Spotify track dataset. Color blue represents positive correlations and red represents negative correlations. Finding the rows and columns correlated with popularity, we can find that popularity is very positively correlated with the danceability of the song and negatively correlated with the instrumentalness of the song. Is this really the case?</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-14-1.png" width="672" />
+<p><img src="finalproj_files/figure-html/unnamed-chunk-20-1.png" width="672" />
 </p>
 <p>For further analysis, we plotted the scatter plot of popularity vs. instrumentalness and the scatter plot of popularity vs. danceability.</p>
 <p>The plot on the left shows popularity vs. instrumentalness. We can see that the points are mostly concentrated at the ends of the x-axis, and there is a tendency for the popularity to decrease as the instrumentalness rises. In addition, we also find that almost all points with high popularity are concentrated in the region where the instrumentalness is particularly small (upper left corner).</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 </div>
 </div>
 <div id="spotify-vs-metacritic-vs-rym" class="section level2 hasAnchor" number="4.5">
@@ -214,17 +214,17 @@
 <li>Second, the ratings of albums with low Spotify popularity are usually at an average level, and then the range of ratings of albums with high Spotify popularity is very large.</li>
 <li>In addition, the curve fitted by geom_smooth tells us that albums with extreme low or extreme high ratings are usually more popular. This sounds quite reasonable. Because, high quality albums with high ratings are popular with the masses, while albums with low ratings, which we usually call catchy songs, are also very popular on the web. After all, in this day and age, the attributes of society are entertaining.</li>
 </ul>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <p>The following two graphs show the relationship between Spotify popularity and metacritic rating as well as the relationship between Spotify popularity and Rate Your Music rating in different years. Although in general, the trends and distribution of these graphs are similar to the ones we just mentioned, in some years, there are some edge cases that lead to subtle changes in the situation. For example, in the second graph below, which shows Spotify popularity and Rate Your Music rating, in 2021, albums with higher ratings no longer enjoy higher popularity, which is a curious phenomenon. A closer look reveals that there is an outlier that causes the fitted curve to shift downward.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
 <p>In order to better analyze the relationship between popularity and rating, and considering that these are all continuous variables, we plotted the Parallel coordinate plot and properly changed the order of the variables for better observation.</p>
 <p>Overall, the relationship between the five variables looks like a capital <strong>M</strong>, which means that the majority of albums fall within a range where high ratings and low popularity are associated overall. This corresponds to the graph we just presented, where the center of the graph is in the lower right corner. Of course, there are some exceptions in the Parallel coordinate plot, such as the <strong>inverted M</strong>. These are albums with low ratings but very high popularity.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
 <p>Below is the Parallel coordinate plot by year, and we can see that in addition to showing the overall trend, the exceptions, i.e., the inverted M shape, become more and more pronounced as the year increases.</p>
 <p>We can see that in 2018, the number of inverted M shapes lines is small and they do not stand out, meaning that the minimum popularity is not high. However, in 2022, there are more albums that have this very low rating, yet are extremely popular, both in terms of minimum, maximum and median popularity.</p>
 <p>Perhaps this is related to the gradual popularity of short videos and their viral spread of catchphrases. In any case, it seems to show that our time is being occupied by entertainment little by little.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
 
 </div>
 </div>
