@@ -23,3 +23,6 @@ spotify-track
 spotify-vs-metacritic-vs-rym
 interactive-component
 conclusion
+takeaways
+limitations-future-direction
+lessons-learned
