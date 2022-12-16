@@ -118,10 +118,8 @@ write.csv(spotify_data, "data/spotify_new.csv", row.names = FALSE)
 ```
 
 ```{r}
-# tracks_data <- data.frame()
-# track_not_matched <- 1:nrow(df)
-# track_not_matched <- c(9,  430,  661,  672,  729,  914, 1106, 1564, 1577, 1589, 1658, 1815, 1886, 1939, 1941, 1948, 1977, 1979, 2008, 2157, 2179, 2187, 2249, 2259)
-track_not_matched <- c(661,  672,  914, 1589, 2157)
+tracks_data <- data.frame()
+track_not_matched <- 1:nrow(df)
 maxiter <- 1 # increase if too many missing albums
 iter <- 1
 while (iter <= maxiter) {

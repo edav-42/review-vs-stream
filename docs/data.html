@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 3 Data | Review vs Stream</title>
   <meta name="description" content="Chapter 3 Data | Review vs Stream" />
-  <meta name="generator" content="bookdown 0.30 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 3 Data | Review vs Stream" />
   <meta property="og:type" content="book" />
@@ -53,12 +53,12 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
-<script src="libs/plotly-binding-4.10.1/plotly.js"></script>
+<script src="libs/plotly-binding-4.10.0/plotly.js"></script>
 <script src="libs/typedarray-0.1/typedarray.min.js"></script>
 <link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
 <script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
-<link href="libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-2.5.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-2.5.1/plotly-latest.min.js"></script>
 
 
 
@@ -92,7 +92,10 @@
 </ul></li>
 <li class="chapter" data-level="3" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>3</b> Data</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="data.html"><a href="data.html#sources"><i class="fa fa-check"></i><b>3.1</b> Sources</a></li>
+<li class="chapter" data-level="3.1" data-path="data.html"><a href="data.html#sources"><i class="fa fa-check"></i><b>3.1</b> Sources</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="data.html"><a href="data.html#data-collecting"><i class="fa fa-check"></i><b>3.1.1</b> Data collecting</a></li>
+</ul></li>
 <li class="chapter" data-level="3.2" data-path="data.html"><a href="data.html#cleaning-transformation"><i class="fa fa-check"></i><b>3.2</b> Cleaning / transformation</a>
 <ul>
 <li class="chapter" data-level="3.2.1" data-path="data.html"><a href="data.html#metacritic-data"><i class="fa fa-check"></i><b>3.2.1</b> Metacritic Data</a></li>
@@ -138,11 +141,43 @@
 <h1><span class="header-section-number">Chapter 3</span> Data<a href="data.html#data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="sources" class="section level2 hasAnchor" number="3.1">
 <h2><span class="header-section-number">3.1</span> Sources<a href="data.html#sources" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>We first scrapped album ratings from <a href="https://metacritic.com">Metacritic</a>, a famous and reliable website that aggregates reviews and ratings for music albums. We scrapped the critic ratings for albums released between 2018 and 2022(inclusive) and concatenate them to one table.(Please see <a href="data/metacritic.Rmd">metacritic.Rmd</a> for scraping and cleaning code)</p>
-<p>Based on the albums and artist name we got from the Metacritic website, we collected the user rating of corresponding albums from <a href="https://rateyourmusic.com">Rate Your Music (RYM)</a>, which is the largest community-driven online music database. To be specific, we query each albums by its name and artist through an unofficial API <a href="https://github.com/dbeley/rymscraper">rymscraper</a>. (Please see <a href="data/rym.ipynb">rym.ipynb</a> for querying and cleaning code)</p>
-<p>For the user popularity of each album, we collect popularity from <a href="https://developer.spotify.com/documentation/web-api/reference/#/operations/get-track">Spotify official APIs</a>. Since Spotify provides the popularity of each track in an album, we records the avg, mean, median, and max popularity of all tracks in a album for each album. (Please see <a href="data/spotify.Rmd">spotify.Rmd</a> for querying and cleaning code)</p>
-<p>Additionally, we also collect the features of all songs that appears in the album that we collected before. That is, we have a new table to save the duration, name, popularity, acousticness, danceability, energy, instrumentalness, key, liveness, loudness, mode, speechiness, tempo, time_signature and valence of each song/track.(Please see <a href="data/spotify_tracks.Rmd">spotify_tracks.Rmd</a> for querying and cleaning code)</p>
+<p>As stated in Chapter <a href="proposal.Rmd">Proposal</a>, we have three major data sources:</p>
+<ol style="list-style-type: decimal">
+<li>Metacritic, for critic reviews</li>
+<li>Rate Your Music (RYM), for user ratings</li>
+<li>Spotify, for album streams/popularity</li>
+</ol>
+<p>We first scrapped album ratings from <a href="https://metacritic.com">Metacritic</a>, a famous and reliable website that aggregates reviews and ratings for music albums. We scrapped the critic ratings for albums released between 2018 and 2022(inclusive) and concatenate them to one table.
+We get 2275 records in total.
+(Please see <a href="data/metacritic.Rmd">metacritic.Rmd</a> for scraping and cleaning code)</p>
+<p>Based on the albums and artist name we got from the Metacritic website, we collected the user rating of corresponding albums from <a href="https://rateyourmusic.com">Rate Your Music (RYM)</a>, which is the largest community-driven online music database. To be specific, we query each albums by its name and artist through a modified unofficial API <a href="https://github.com/dbeley/rymscraper">rymscraper</a>. (Please see <a href="data/rym.ipynb">rym.ipynb</a> for querying and cleaning code)</p>
+<p>For the user popularity of each album, we collect popularity from <a href="https://developer.spotify.com/documentation/web-api/reference/#/operations/get-track">Spotify official APIs</a>. Since Spotify provides the popularity of each track in an album, we records the min, mean, median, and max popularity of all tracks in a album for each album. (Please see <a href="data/spotify.Rmd">spotify.Rmd</a> for querying and cleaning code)</p>
+<p>Additionally, from Spotify APIs, we also collect the features of all songs that appears in the album that we collected before. That is, we have a new table to save the duration, name, popularity, acousticness, danceability, energy, instrumentalness, key, liveness, loudness, mode, speechiness, tempo, time_signature and valence of each song/track.(Please see <a href="data/spotify_tracks.Rmd">spotify_tracks.Rmd</a> for querying and cleaning code)</p>
 <p>Because the raw data is not so clean and showing them directly would be a disaster, we prefer introduce the types of variables and other information of these data set during&amp;after cleaning and transformation. :)</p>
+<div id="data-collecting" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Data collecting<a href="data.html#data-collecting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Since data collecting and processing is especially important in our project, before moving on to the cleaning and transformation section, we would like to further explain the method and logic behind our data collecting.</p>
+<p>First, <strong>none of our data is from an existent file</strong>; we have to scrape the data manually or use some APIs. And for every source, there are two ways to get the data:</p>
+<ol style="list-style-type: decimal">
+<li>Scrape a chart. All sources provide some chart webpages, e.g.,<a href="https://rateyourmusic.com/charts/" class="uri">https://rateyourmusic.com/charts/</a>. These charts are in a table HTML element, so we can easily scrape them to get a CSV file.</li>
+<li>Search a database. There are existent official/unofficial APIs, or we can build some basic APIs, for all sources. These APIs enable us to get the information of an album through related information, like artist and album name.</li>
+</ol>
+<p>Therefore, the first question is which way should we use to collect the data. There are also two approaches:</p>
+<ol style="list-style-type: decimal">
+<li>Get all data by <strong>scrapping charts</strong>. Then join the charts from different sources.</li>
+<li>Get a base chart, then <strong>search the databases</strong> for every record in the base chart.</li>
+</ol>
+<p>We adapted the second approach, because the join operations may lead to either too many missing values (outer join) or too few records (inner join). Also, Spotify doesn’t provide enough charts data.
+Therefore, we scrapped Metacritic charts as the base charts, and then search the records in the charts using RYM and Spotify APIs.</p>
+<p>The Spotify APIs performed relatively well and are closed source, hence we we didn’t touch them. However, the RYM unofficial APIs miss many values without modification. Therefore, we enhance the RYM APIs by a three-layer search:</p>
+<ol style="list-style-type: decimal">
+<li>First we transform the artist and album name to an URL, and search the album directly using the URL. Since an artist or an album may have many alternative names and may contain special characters, this search may return an empty result with a high probability.</li>
+<li>If the first search fails, we then use the artist name to search their discography. Then we look through the discography and return the closest match to what we are looking for. This search almost always find the album except for some edge cases like it finds the wrong artist.</li>
+<li>If the first two searches fail, we then directly search the database using string “artist - album”. Among returned records, we get the closest match to what we are looking for. Since a search engine will always return some results even the database doesn’t contain the record, this search hardly fails.</li>
+</ol>
+<p>The original RYM APIs only perform the second-layer search. Also, we adjust the “get closest match” method to make it more tolerant to special characters.
+Although this three-layer search almost found all albums, some of the results are wrong; we will explain the reasons in section <a href="data.html#missing-value-analysis">Missing value analysis</a>.</p>
+</div>
 </div>
 <div id="cleaning-transformation" class="section level2 hasAnchor" number="3.2">
 <h2><span class="header-section-number">3.2</span> Cleaning / transformation<a href="data.html#cleaning-transformation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -153,7 +188,7 @@
 <p>Thus, before analyzing, we did data cleaning to the Metacritic data set:</p>
 <ol style="list-style-type: decimal">
 <li>Delete useless columns: V6, V8, V9 are useless because of either containing duplicate data or having long text that is not helpful.</li>
-<li>Rename left columns: according to the meaning of each row, we rename the columns as “Metacritic_Score”, “Rank”, “Album_Name”, “Singer”, “Release_Date”, “Description”, “User_Score”, “Release_Year”</li>
+<li>Rename left columns: according to the meaning of each row, we rename the columns as <code>Metacritic_Score</code>, <code>Rank</code>, <code>Album_Name</code>, <code>Singer</code>, <code>Release_Date</code>, <code>Description</code>, <code>User_Score</code>, <code>Release_Year</code></li>
 <li>Transform the data</li>
 </ol>
 <ul>
@@ -228,7 +263,7 @@
 <p>Before conducting merging, data need cleaning and transformation.</p>
 <ol style="list-style-type: decimal">
 <li>Delete useless columns: Type, Recorded are useless because they contain duplicate data.</li>
-<li>New column: We found that “RYM Rating” is in charcter type and contains not only ratings but also number of people who rate the album. Therefore, we extract the number of ratings and create a new column named “Num_of_RYM_Ratings”</li>
+<li>New column: We found that <code>RYM Rating</code> is in charcter type and contains not only ratings but also number of people who rate the album. Therefore, we extract the number of ratings and create a new column named <code>Num_of_RYM_Ratings</code></li>
 <li>Transform the data</li>
 </ol>
 <ul>
@@ -465,7 +500,7 @@
 </div>
 <div id="final-data-set" class="section level3 hasAnchor" number="3.2.4">
 <h3><span class="header-section-number">3.2.4</span> Final Data Set<a href="data.html#final-data-set" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>After cleaning data set from each website/API, we concatenate 3 album-level data set by “id”, which was generated during the query to API and was based on combination of album name and artist name.</p>
+<p>After cleaning data set from each website/API, we concatenate 3 album-level data set by <code>id</code>, which was generated during the query to API using function <code>tibble::rowid_to_column</code>.</p>
 <p>The final album data set has 2275 observations of 20 variables.(For duplicate columns, we only conserve 1 column in the final data set)</p>
 <p>The following picture is for a rough look. Please see <a href="assets/df1.png">this</a> for a detailed look.</p>
 <p><img src="assets/df1.png" /></p>
@@ -474,13 +509,7 @@
 </div>
 <div id="missing-value-analysis" class="section level2 hasAnchor" number="3.3">
 <h2><span class="header-section-number">3.3</span> Missing value analysis<a href="data.html#missing-value-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<pre><code>##  [1] &quot;id&quot;                 &quot;Metacritic_Score&quot;   &quot;Rank&quot;              
-##  [4] &quot;Album_Name&quot;         &quot;Singer&quot;             &quot;Release_Date&quot;      
-##  [7] &quot;Desciption&quot;         &quot;Release_Year&quot;       &quot;RYM_Rating&quot;        
-## [10] &quot;Genres&quot;             &quot;Language&quot;           &quot;Tracks&quot;            
-## [13] &quot;Colorscheme&quot;        &quot;RYM_Rank&quot;           &quot;Num_of_RYM_Ratings&quot;
-## [16] &quot;avg_pop&quot;            &quot;max_pop&quot;            &quot;min_pop&quot;           
-## [19] &quot;med_pop&quot;            &quot;n&quot;</code></pre>
+<p>We first analyze the joint album-level data.</p>
 <pre><code>## NOTE: The following pairs of variables appear to have the same missingness pattern.
 ##  Please verify whether they are in fact logically distinct variables.
 ##       [,1]         [,2]                
@@ -523,9 +552,6 @@
 <li>There is only one album we cannot find on RYM: “Pulse/Quartet” by Steve Reich.</li>
 </ul></li>
 </ol>
-<!-- TODO
-Missing values of spotify_tracks
- -->
 <p>However, <strong>complete</strong> data doesn’t mean <strong>correct</strong> data.
 There is no such thing as a free lunch.
 The completeness of our data provided by the “search” nature of our data collecting method also raise the probability of returning a <strong>wrong</strong> data, when the data <em>should be missing</em>.</p>
@@ -536,6 +562,9 @@ Some other examples includes that the album in the Metacritic chart is a new liv
 <p><img src="assets/2022-12-14-15-19-10.png" /></p>
 <p>Also, we are exploring the “art” world; artists are full of creative ideas to name themself and their albums. Therefore, there are relatively more edge cases where we will get the wrongly-matched data.</p>
 <p>However, it is hard to consider all the edge cases and eliminate the wrong data. It is our next steps to reduce the error possibility.</p>
+<p>Now we give a brief analysis of the missing values in the track-level data.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>As we can see, since we are collecting the tracks information of our already collected albums, the basic information like name (<code>nam</code>) and popularity (<code>ppl</code>) has no missing values. However, there are 20 tracks that do not have audio features. And we can see that if one of the audio feature is missing, all other audio features of that track are also missing. Therefore, we can deduce that Spotify may not record the audio information for those tracks, or the APIs fail to get the audio features.</p>
 
 </div>
 </div>
