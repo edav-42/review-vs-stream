@@ -15,15 +15,49 @@ library(redav)
 
 ## Sources
 
-We first scrapped album ratings from [Metacritic](https://metacritic.com), a famous and reliable website that aggregates reviews and ratings for music albums. We scrapped the critic ratings for albums released between 2018 and 2022(inclusive) and concatenate them to one table.(Please see [metacritic.Rmd](data/metacritic.Rmd) for scraping and cleaning code)
+As stated in Chapter [Proposal](proposal.Rmd), we have three major data sources:
 
-Based on the albums and artist name we got from the Metacritic website, we collected the user rating of corresponding albums from [Rate Your Music (RYM)](https://rateyourmusic.com), which is the largest community-driven online music database. To be specific, we query each albums by its name and artist through an unofficial API [rymscraper](https://github.com/dbeley/rymscraper). (Please see [rym.ipynb](data/rym.ipynb) for querying and cleaning code)
+1. Metacritic, for critic reviews
+2. Rate Your Music (RYM), for user ratings
+3. Spotify, for album streams/popularity
 
-For the user popularity of each album, we collect popularity from [Spotify official APIs](https://developer.spotify.com/documentation/web-api/reference/#/operations/get-track). Since Spotify provides the popularity of each track in an album, we records the avg, mean, median, and max popularity of all tracks in a album for each album. (Please see [spotify.Rmd](data/spotify.Rmd) for querying and cleaning code)
+We first scrapped album ratings from [Metacritic](https://metacritic.com), a famous and reliable website that aggregates reviews and ratings for music albums. We scrapped the critic ratings for albums released between 2018 and 2022(inclusive) and concatenate them to one table.
+We get 2275 records in total.
+(Please see [metacritic.Rmd](data/metacritic.Rmd) for scraping and cleaning code)
 
-Additionally, we also collect the features of all songs that appears in the album that we collected before. That is, we have a new table to save the duration, name, popularity, acousticness, danceability, energy, instrumentalness, key, liveness, loudness, mode, speechiness, tempo, time_signature and valence of each song/track.(Please see [spotify_tracks.Rmd](data/spotify_tracks.Rmd) for querying and cleaning code)
+Based on the albums and artist name we got from the Metacritic website, we collected the user rating of corresponding albums from [Rate Your Music (RYM)](https://rateyourmusic.com), which is the largest community-driven online music database. To be specific, we query each albums by its name and artist through a modified unofficial API [rymscraper](https://github.com/dbeley/rymscraper). (Please see [rym.ipynb](data/rym.ipynb) for querying and cleaning code)
+
+For the user popularity of each album, we collect popularity from [Spotify official APIs](https://developer.spotify.com/documentation/web-api/reference/#/operations/get-track). Since Spotify provides the popularity of each track in an album, we records the min, mean, median, and max popularity of all tracks in a album for each album. (Please see [spotify.Rmd](data/spotify.Rmd) for querying and cleaning code)
+
+Additionally, from Spotify APIs, we also collect the features of all songs that appears in the album that we collected before. That is, we have a new table to save the duration, name, popularity, acousticness, danceability, energy, instrumentalness, key, liveness, loudness, mode, speechiness, tempo, time_signature and valence of each song/track.(Please see [spotify_tracks.Rmd](data/spotify_tracks.Rmd) for querying and cleaning code)
 
 Because the raw data is not so clean and showing them directly would be a disaster, we prefer introduce the types of variables and other information of these data set during&after cleaning and transformation. :)
+
+### Data collecting
+
+Since data collecting and processing is especially important in our project, before moving on to the cleaning and transformation section, we would like to further explain the method and logic behind our data collecting.
+
+First, **none of our data is from an existent file**; we have to scrape the data manually or use some APIs. And for every source, there are two ways to get the data:
+
+1. Scrape a chart. All sources provide some chart webpages, e.g.,<https://rateyourmusic.com/charts/>. These charts are in a table HTML element, so we can easily scrape them to get a CSV file.
+2. Search a database. There are existent official/unofficial APIs, or we can build some basic APIs, for all sources. These APIs enable us to get the information of an album through related information, like artist and album name.
+
+Therefore, the first question is which way should we use to collect the data. There are also two approaches:
+
+1. Get all data by **scrapping charts**. Then join the charts from different sources.
+2. Get a base chart, then **search the databases** for every record in the base chart.
+
+We adapted the second approach, because the join operations may lead to either too many missing values (outer join) or too few records (inner join). Also, Spotify doesn't provide enough charts data.
+Therefore, we scrapped Metacritic charts as the base charts, and then search the records in the charts using RYM and Spotify APIs.
+
+The Spotify APIs performed relatively well and are closed source, hence we we didn't touch them. However, the RYM unofficial APIs miss many values without modification. Therefore, we enhance the RYM APIs by a three-layer search:
+
+1. First we transform the artist and album name to an URL, and search the album directly using the URL. Since an artist or an album may have many alternative names and may contain special characters, this search may return an empty result with a high probability.
+2. If the first search fails, we then use the artist name to search their discography. Then we look through the discography and return the closest match to what we are looking for. This search almost always find the album except for some edge cases like it finds the wrong artist.
+3. If the first two searches fail, we then directly search the database using string "artist - album". Among returned records, we get the closest match to what we are looking for. Since a search engine will always return some results even the database doesn't contain the record, this search hardly fails.
+
+The original RYM APIs only perform the second-layer search. Also, we adjust the "get closest match" method to make it more tolerant to special characters.
+Although this three-layer search almost found all albums, some of the results are wrong; we will explain the reasons in section [Missing value analysis](#missing-value-analysis).
 
 ## Cleaning / transformation
 
@@ -142,7 +176,7 @@ The data set for tracks contains 26834 observations of 16 different variables.
 
 ### Final Data Set
 
-After cleaning data set from each website/API, we concatenate 3 album-level data set by `id`, which was generated during the query to API and was based on combination of album name and artist name.
+After cleaning data set from each website/API, we concatenate 3 album-level data set by `id`, which was generated during the query to API using function `tibble::rowid_to_column`.
 
 The final album data set has 2275 observations of 20 variables.(For duplicate columns, we only conserve 1 column in the final data set)
 
@@ -154,9 +188,10 @@ Remember that we also have a track-level data set from Spotify. We will have exp
 
 ## Missing value analysis
 
+We first analyze the joint album-level data.
+
 ```{r}
 data <- read.csv('data/data.csv')
-names(data)
 ```
 
 ```{r fig.width=10}
@@ -178,10 +213,6 @@ Also, the missing patterns are very clear:
 3. If we cannot find an album on RYM, then the data offered by RYM is missing; this includes `RYM_Rating, Num_of_RYM_Ratings, Genres, Language, Tracks, Colorscheme, RYM_Rank`.
    - There is only one album we cannot find on RYM: "Pulse/Quartet" by Steve Reich.
 
-<!-- TODO
-Missing values of spotify_tracks
- -->
-
 However, **complete** data doesn't mean **correct** data.
 There is no such thing as a free lunch.
 The completeness of our data provided by the "search" nature of our data collecting method also raise the probability of returning a **wrong** data, when the data *should be missing*.
@@ -196,3 +227,13 @@ Some other examples includes that the album in the Metacritic chart is a new liv
 Also, we are exploring the "art" world; artists are full of creative ideas to name themself and their albums. Therefore, there are relatively more edge cases where we will get the wrongly-matched data.
 
 However, it is hard to consider all the edge cases and eliminate the wrong data. It is our next steps to reduce the error possibility.
+
+Now we give a brief analysis of the missing values in the track-level data.
+
+```{r}
+tracks <- read.csv('data/spotify_tracks.csv')
+names(tracks) <- abbreviate(gsub("_", "", names(tracks)), minlength = 3)
+plot_missing(tracks, percent = F)
+```
+
+As we can see, since we are collecting the tracks information of our already collected albums, the basic information like name (`nam`) and popularity (`ppl`) has no missing values. However, there are 20 tracks that do not have audio features. And we can see that if one of the audio feature is missing, all other audio features of that track are also missing. Therefore, we can deduce that Spotify may not record the audio information for those tracks, or the APIs fail to get the audio features.
