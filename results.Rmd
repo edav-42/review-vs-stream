@@ -35,6 +35,17 @@ sptf_tk = read.csv("data/spotify_tracks.csv")
 What's the distribution of critic ratings of Albums that were released between 2018 and 2022 on Metacritic look like? How does it change over time? The following graph tells us the answer.
 
 First, from the marginal density graph in the right part of the graph, we can tell that the  distribution of critic ratings is a little bit **left skewed**. Most albums' ratings are within the range [70,90]. There are, however, a few albums with really low ratings. For example, one album's rating on Metacritic doesn't even reach 40 out of 100.
+Also, there are some *extraordinary* albums that almost get a full score.
+Now we print the album with the highest score and the one with the lowest score.
+
+```{r}
+mt_1 <- mt[order(mt$Metacritic_Score),]
+print_album <- function(s) {
+  print(paste(s$Album_Name, ' by ', s$Singer, ' with score ', s$Metacritic_Score))
+}
+print_album(mt_1[nrow(mt_1),c('Album_Name', 'Singer', 'Metacritic_Score')])
+print_album(mt_1[1,c('Album_Name', 'Singer', 'Metacritic_Score')])
+```
 
 Second, the top density curve of the graph tells us how the number of ratings of albums on Metacritic changes over time. We can see that the number of ratings is **steadily decrease** over time. Since every album only has one score on Metacritic, it could be that the phenomenon that the number of albums released is decreased over time leads to the decline.
 
@@ -48,17 +59,31 @@ ggscatterhist(df, x = 'Release_Date', y = 'Metacritic_Score', color = "purple2",
 
 ## Rate Your Music
 
-The three pattern also exist in the below plot for RYM ratings. However, the **variance** of user ratings are much larger than critic reviews. Why? The lowest rating in Metacritic is around 40 while in RYM, it is below 1. Considering that the critic ratings range from 0 to 100 and user ratings range from 0 to 5, 40 in 100 is a much tender rating compared to 1 in 5. We can also observe that the number of score is decline over time and also there are invisible lines between years.
+The three pattern also exist in the below plot for RYM ratings. However, the **variance** of user ratings are much larger than critic reviews. Why? The lowest rating in Metacritic is around 40 while in RYM, it is below 1. Considering that the critic ratings range from 0 to 100 and user ratings range from 0 to 5, 40 in 100 is a much tender rating compared to 1 in 5. We can also observe that the number of albums is decline over time and also there are invisible lines between years.
 
 ```{r}
 ggscatterhist(df, x = 'Release_Date', y = 'RYM_Rating', color = "blue3", size = 0.1, alpha = 0.8,margin.params = list(fill = "lightgray"), xlab = "Album Release Date", ylab = "Album Score on RYM", title = "Album Score on RYM")
 ```
 
+Again, we give the album with the highest score and the one with the lowest score on RYM.
+An interesting observation is that the album with lowest score on Metacritic and RYM are both rap music, and the highest are both indie music.
+
+```{r}
+rym_1 <- rym %>% filter(!is.na(RYM.Rating))
+rym_1 <- rym_1[order(rym_1$RYM.Rating),]
+print_album <- function(s) {
+  print(paste(s$Name, ' by ', s$Artist, ' with score ', s$RYM.Rating))
+}
+print_album(rym_1[nrow(rym_1),c('Name', 'Artist', 'RYM.Rating')])
+print_album(rym_1[1,c('Name', 'Artist', 'RYM.Rating')])
+```
+
 Next, we will analysis relationship between the number of users who rate the album and the album ratings through an **interactive scatter plot**. You can *hover* over the point and it will show you the name of the album you point at. You can also select a rectangle to see the partial data and dive deeper. 
 
-The point are colored according to the Metacritic score, the deeper of the color means the higher the score is. Along the y-axis, we can see that roughly the color of the points turns deeper, which means overall the RYM ratings and Metacritic Score have positive relationships.(We will discuss the relationship later)
+The point are colored according to the **Metacritic score**, the deeper of the color means the higher the score is. Along the y-axis, we can see that roughly the color of the points turns deeper, which means overall the RYM ratings and Metacritic Score have positive relationships. (We will discuss the relationship later)
 
 Regarding the relationship between the number of users who rate the album and the album ratings, we have following findings:
+
 - There is no albums with *high votes and low ratings*. It is reasonable because people have more incentive to rate an album if they think it is great, otherwise they will just omit it. There is an exception on the album **"Jesus Is King"** by Kanye West with 27k votes and 2.38 rating. Maybe we should all listen to this album thouroughly to find out why:)
 - For albums with more than a few votes, the average rating increases with the number of votes.
 - No albums in the area where represents high votes and max ratings
