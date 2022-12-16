@@ -1,13 +1,34 @@
 # Conclusion
 
-## Limitations and Future Directions
+For this exploratory data analysis project, we collected professional music review scores from Metacritic, user music review scores from Rate Your Music, and popularity data from Spotify. Our goal was to explore the relationship between professional music scores and user scores at the album level and the link between album popularity and its rating. Here are some of the main takeaways.
 
-- Although our collected dataset is large and covers three different sources, there are still many more aspects of an album regarding review and stream we can consider:
-    - Real and converted streams. Spotify only gives us a variable called `popularity` which is returned by a closed source algorithm. To better capture the popularity of an album, we can find real stream data. For example, data provided by [ChartMasters](https://chartmasters.org) and [Billboard](https://www.billboard.com).
-    - More platforms. This project only considers one streaming platform; in the future, we can collect data from more streaming platforms like Apple Music and YouTube. However, the reason we haven't consider these platforms yet is that they lack usable APIs.
-    - Specific critics. Metacritic aggregates the reviews from some critics. However, it doesn't cover some famous critics like [Pitchfork](https://pitchfork.com). Therefore, we can look into the data from some specific critics. This can also review the taste, appreciation, and influence of the critics.
+## Takeaways
 
-## Lessons Learned
+1. The data distributions for both Metacritic ratings and RYM ratings are left-skewed and unimodal.
+2. In the RYM ratings dataset, there are very few albums with high vote counts but low ratings. And the range of ratings for the low-voted albums covers almost all of the available range.
+3. The top 15 artists on Metacritic do not intersect with the top 15 artists on RYM. This may indicate the divide between the musical tastes of professional judges and the musical tastes of the general public.
+4. Professional ratings are positively correlated with user ratings on the whole, but the confidence in such judgments is not very strong in the low scoring areas.
+5. Spotify's popularity data distribution is right-skewed and single-peaked.
+6. The maximum, minimum, average and median popularity of songs in an album are positively related overall. However, some albums have large variance in popularity within albums, which is an exception.
+7. The higher the Danceability of a song the more popular it is, in contrast to Instrumentalness which has a negative relationship with the popularity of a song.
+8. There is no linear relationship between the rating of an album and its popularity. In general, albums with moderate ratings have lower popularity and cover a wider range of popularity. Albums with very high or very low ratings have a higher popularity and a smaller range. In addition, albums with low popularity ratings are generally mediocre, while albums with high popularity ratings have a large variance.
 
+## Limitations & Future Direction
 
+Although our collected dataset is large and covers three different sources, there are still many more aspects of an album regarding review and stream we can consider:
 
+1. Real and converted streams. Spotify only gives us a variable called `popularity` which is returned by a closed source algorithm. To better capture the popularity of an album, we can find real stream data. For example, data provided by [ChartMasters](https://chartmasters.org) and [Billboard](https://www.billboard.com).
+2. More platforms. This project only considers one streaming platform; in the future, we can collect data from more streaming platforms like Apple Music and YouTube. However, the reason we haven't consider these platforms yet is that they lack usable APIs.
+3. Specific critics. Metacritic aggregates the reviews from some critics. However, it doesn't cover some famous critics like [Pitchfork](https://pitchfork.com). Therefore, we can look into the data from some specific critics. This can also review the taste, appreciation, and influence of the critics.
+
+Besides pure review and stream, there are also many more aspects we can explore.
+We did not analyze the data from the singers' and users' perspectives. For example, we do not have access to information such as the age, gender and country of the singer, nor do we have access to information about the user profile. So if we have access to more data in the future we would like to make improvements in the following points.
+
+1. Add the analysis from singer's perspective, such as the relationship between album rating/popularity and singer's age/gender/country.
+2. Add user profile analysis, such as drawing dot plots on a map to show the listening preferences and ratings of users in different regions. Similarly we can also analyze from the perspective of user's age group or gender, etc.
+3. Introduce the music genres to which albums belong, and explore the relationship between music genres and album ratings, as well as the relationship between music genres and album popularity.
+4. Introduce song lyrics dataset to visualize popularity and lyrics content.
+
+## Lessons learned
+
+In this exploratory data report, we spent quite a bit of time on the part of acquiring the data upfront and cleaning it. The data is a very important part of the exploratory data report, which determines the angle from which the report can be analyzed and the quality of the report. Since our data are crawled from websites or API queries, the cleanliness and coverage of the data are limited. In this project, we learned that we need to properly organize the questions we want to analyze and confirm the availability of the corresponding data. In addition, in the analysis process, we need to pay attention to the type of variables selected (continuous/discrete/temporal/geographic), consider appropriate methods to present graphs with high information density, and present our analysis and ideas about the graphs appropriately.

@@ -60,7 +60,6 @@ The point are colored according to the Metacritic score, the deeper of the color
 
 Regarding the relationship between the number of users who rate the album and the album ratings, we have following findings:
 - There is no albums with *high votes and low ratings*. It is reasonable because people have more incentive to rate an album if they think it is great, otherwise they will just omit it. There is an exception on the album **"Jesus Is King"** by Kanye West with 27k votes and 2.38 rating. Maybe we should all listen to this album thouroughly to find out why:)
-
 - For albums with more than a few votes, the average rating increases with the number of votes.
 - No albums in the area where represents high votes and max ratings
 - There are points who are lower than expected ratings and should be seen as **outliers.** (e.g. "Jesus Is King")
