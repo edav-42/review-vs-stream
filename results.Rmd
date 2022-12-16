@@ -65,7 +65,7 @@ Regarding the relationship between the number of users who rate the album and th
 - There are points who are lower than expected ratings and should be seen as **outliers.** (e.g. "Jesus Is King")
 - Albums with low votes have relatively full range over y-axis.
 
-```{r}
+```{r, eval=FALSE}
 fig <- plot_ly(df, x = ~Num_of_RYM_Ratings, y = ~RYM_Rating, text = ~ Album_Name, color = ~Metacritic_Score, type = 'scatter', mode = 'markers', colors = 'YlOrBr',
         sizes = c(10, 50),
         marker = list(opacity = 0.9, sizemode = 'diameter'))
@@ -76,6 +76,11 @@ fig <- fig %>% layout(title = 'Album Score on RYM',
 
 fig
 ```
+
+<iframe width="800" height="500" src="assets/4results.html"></iframe>
+<style>
+  iframe {border:none;}
+</style>
 
 ## Metacritic VS RYM
 

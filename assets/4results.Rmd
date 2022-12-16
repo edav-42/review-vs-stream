@@ -1,0 +1,38 @@
+---
+output: html_document
+---
+
+```{r, echo=FALSE, message=FALSE}
+library(ggplot2)
+library(ggExtra)
+library(ggpubr)
+library(dplyr)
+library(forcats)
+library(stringr)
+library(Rmisc)
+library(GGally)
+library(ggcorrplot)
+library(plotly)
+df = read.csv("../data/data.csv")
+
+mt = read.csv("../data/meta.csv")
+rym = read.csv("../data/rym.csv")
+rym$Released <- as.Date(rym$Released , format = "%d %B %Y")
+df$Release_Date = as.Date(df$Release_Date)
+
+sptf = read.csv("../data/spotify.csv")
+sptf_tk = read.csv("../data/spotify_tracks.csv")
+```
+
+```{r, echo=FALSE, warning=FALSE}
+fig <- plot_ly(df, x = ~Num_of_RYM_Ratings, y = ~RYM_Rating, text = ~ Album_Name, color = ~Metacritic_Score, type = 'scatter', mode = 'markers', colors = 'YlOrBr',
+        sizes = c(10, 50),
+        marker = list(opacity = 0.9, sizemode = 'diameter'))
+fig <- fig %>% layout(title = 'Album Score on RYM',
+         xaxis = list(showgrid = FALSE),
+         yaxis = list(showgrid = FALSE),
+         showlegend = TRUE)
+
+fig
+```
+
